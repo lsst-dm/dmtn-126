@@ -37,12 +37,9 @@ Clean built files::
 Updating acronyms
 -----------------
 
-A table of the technote's acronyms and their definitions are maintained in the `acronyms.tex` file, which is committed as part of this repository.
 To update the acronyms table in ``acronyms.tex``::
 
     make acronyms.tex
-
-*Note: this command requires that this repository was cloned as a submodule.*
 
 The acronyms discovery code scans the LaTeX source for probable acronyms.
 You can ensure that certain strings aren't treated as acronyms by adding them to the `skipacronyms.txt <./skipacronyms.txt>`_ file.
