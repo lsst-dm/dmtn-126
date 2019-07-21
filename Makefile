@@ -13,7 +13,7 @@ endif
 
 export TEXMFHOME ?= lsst-texmf/texmf
 
-$(DOCNAME).pdf: $(tex) meta.tex
+$(DOCNAME).pdf: $(tex) meta.tex acronyms.tex
 	xelatex $(DOCNAME)
 	bibtex $(DOCNAME)
 	xelatex $(DOCNAME)
