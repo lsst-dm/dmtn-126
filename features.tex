@@ -1,0 +1,26 @@
+
+
+As a <type of user>, I want <some feature> so that <some reason>. 
+
+\subsection{Compare Images}
+\begin{itemize}
+\item{blinking}
+\item{side-by-side}
+\item{Locking on WCS or pixels coordinates}
+\item{Locking on scale and limits}
+\end{itemize}
+
+All groups polled requested the ability to directly compare two images, by locking WCS or pixel coordinates, scale and limits, and both blinking and looking side by side.
+After locking users want to be able to pan and zoom while viewing side by side or blinking.
+Two groups also requested a ``crossfade'' option as ``nice to have'' rather than essential.
+Crossfade means that two images are overlaid at the same time, and the user moves a slider to shift the relative weighting of each image.
+
+Using ds9 on lsst-dev this is possible and easy (for frequent users of ds9).
+Using Firefly or matplotlib on Nublado, it may be possible, but it is not easy.
+
+User stores
+\begin{itemize}
+\item{As a pipelines developer,  I want to be able to blink two locked images so that I can assess the effect of an algorithm modification.}
+\item{As a camera team developer,  I want to be able to change the scale limits of two side-by-side images by hand, so that I can see the overscan.}
+\end{itemize}
+
