@@ -10,7 +10,11 @@ from a large scale view down to pixel-level images.  In order to make pixel-leve
 viewer will also need to support overplotting of mask planes.
 
 Tony Johnson's image viewer, developed for the camera team, currently supports raft-level images and could be
-extended to support full focal planes.  There are third party packages that can do large scale image
+extended to support full focal planes.  Luis da Costa has also developed a large scale viewer to handle preview
+data as it comes off the camera.  This viewer can handle full focal planes.  There is talk of combining the
+development effort on these two tools.
+
+There are third party packages that can do large scale image
 visualization, but these involve resampling images onto some dynamic pixellization of the sky (i.e.HEALPIX) and
 thus, on some level, erase the information contained in individual LSST pixels.  The principal barrier to just
 adopting Tony Johnson's image viewer is that it is enabled my a massive hardware investment, which may make it
