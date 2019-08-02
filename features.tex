@@ -8,8 +8,9 @@ As a <type of user>, I want <some feature> so that <some reason>.
 Commissioning, Camera, and DRP expressed interest in being able to load a full focal plane and zoom continuously
 from a large scale view down to pixel-level images.  In order to make pixel-level information useful, any
 viewer will also need to support overplotting of mask planes.
-The only tool that achieves scaling from full focal plane down to pixels is Tony Johnson's image
-viewer, which was developed for the Camera Team.  There are third party packages that can do large scale image
+
+Tony Johnson's image viewer, developed for the camera team, currently supports raft-level images and could be
+extended to support full focal planes.  There are third party packages that can do large scale image
 visualization, but these involve resampling images onto some dynamic pixellization of the sky (i.e.HEALPIX) and
 thus, on some level, erase the information contained in individual LSST pixels.  The principal barrier to just
 adopting Tony Johnson's image viewer is that it is enabled my a massive hardware investment, which may make it
