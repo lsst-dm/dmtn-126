@@ -43,10 +43,38 @@ The QA Working Group (QAWG) was formed in mid-calendar-2017, with a wide-ranging
 The QAWG produced an extensive report (\citeds{DMTN-085}), which touched on issues in the area of image display and visualization.
 However, due to uncertainty around project scope and the future of development of image display tools within DM, the QAWG did not issue effective recommendations in this area.
 
-The Image Display Working Group was constituted in summer 2019 with the primary goal of rectifying this shortcoming, as well as issuing recommendations on image display for the purposes of commissioning (which fell outside the QAWG scope) and considering whether useful recommendations can be made about tool development in support of diagnostic work within the Camera Subsystem.
+The Image Display Working Group (IDWG) was constituted in summer 2019 with the primary goal of rectifying this shortcoming, as well as issuing recommendations on image display for the purposes of commissioning (which fell outside the QAWG scope) and considering whether useful recommendations can be made about tool development in support of diagnostic work within the Camera Subsystem.
 The detailed terms of the Working Group are provided in \citeds{LDM-702}.
 
+\section{Approach}
+
+The IDWG identified three ways to approach its charge.
+
+\begin{enumerate}
+
+  \item{
+    We considered the various contexts or environments in which a scientist or developer might wish to view images, and established how well these are served by current tools.
+    For example, these environments include a developer working on a standalone laptop, or a scientist using the LSST Science Platform.
+    This analysis is presented in \S\ref{sec:env}.
+  }
+
+  \item{
+    We surveyed groups of key stakeholders across the LSST Project, including DM pipeline developers, members of the Commissioning Team, and members of the Camera Team, to understand what they regard as the most important use cases for visualization, and how well those use cases are served by existing tools.
+    This analysis is presented in \S\ref{sec:features}.
+  }
+
+  \item{
+    We identified existing tools --- including those developed within DM, those produced by other subsystems within LSST, and those available in the wider community --- to assess their capabilities and relevance to the key use cases which have been identified.
+    This analysis is presented in \S\ref{sec:tools}.
+  }
+
+\end{enumerate}
+
+Finally, in \S\ref{sec:conc} we present conclusions and recommendations drawn from the above.
+
 \section{Environments}
+\label{sec:env}
+
 There are eight environments in which a DM member would view images.
 
 Simon's table.
@@ -63,10 +91,13 @@ Some of these features are currently possible and easy on lsst-dev and Nublado; 
 
 We distinguish between ``possible'' and ``easy.''
 
-\section{Features and User Stories}
 \input{features.tex}
 
+\section{Existing Tools}
+\label{sec:tools}
+
 \section{Conclusions}
+\label{sec:conc}
 
 \appendix
 
