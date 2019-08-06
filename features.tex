@@ -53,3 +53,14 @@ User stores
 \item{As a camera team developer,  I want to be able to change the scale limits of two side-by-side images by hand, so that I can see the overscan.}
 \end{itemize}
 
+\subsection{Map/Mask Overlays}
+
+Commissioning, AP, and SST specifically requested the ability to layer images on
+top of each other with varying degrees of transparency and multiple colors.
+This will be used to overlay the masks (detected, saturated, interpolated, etc.)
+from the LSST Science Pipeplines as well as maps of known defects on top of
+images during visual inspection.  The functionality should be provided through
+a realtime UI for use when inspecting an image "by hand" and through a
+programmatic API for use when inspecting an image in a JupyterLab/notebook
+environment. afwDisplay and Firefly both currently support this
+functionality.
