@@ -1,1 +1,19 @@
 \section{Aladinlite}
+
+Aladinlite is a tool for viewing images on entire-sky scales that allows users
+to zoom down to smaller scales defined at the time the images were ingested.
+It enables this functionality by storing images in the HiPS (Hierarchical
+Progressive Survey) schema [citation to 2015A\&A...578A.114F].  In the HiPS
+schema, images are sampled onto iteratively more refined healpixel grids.  These
+resamplings are stored on a central server which allows users connecting to that
+server to smoothly transition between levels of refinement, down to the
+original, finest healpixel sampling.  While this seems to enable much of the
+functionality we have recommended, specifically the ability to transition from
+full focal plane inspection down to single amplifier inspection, the fact that
+the images must be resampled onto a pixel grid that is defined in sky
+coordinates means that the raw, sensor-level pixel information is ultimately
+lost.  Aladinlite was designed to enable scientists to explore images at the
+entire-sky level.  It was not meant to enable engineers to inspect pixel data
+from sensors.  While Aladinlite will likely have a role to play in serving LSST
+image data to the scientific community, it is unlikely to be helpful during the
+process of commissioning the LSST hardware and software.
