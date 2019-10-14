@@ -1,12 +1,114 @@
+\yusra{Can I imagine writing an \texttt{afwDisplay} for this tool? Do they fulfill any use cases}
+
 \subsection{Firefly}
+\yusra{TO DO: Gregory}
 
-\subsection{Ginga}
+Gregory says on Slack:
+It's easy to imagine adding a wide variety of new features to Firefly at relatively modest cost, especially, as I mentioned in the meeting last week, ones that mainly involve writing more `afw`-oriented Python interfaces to existing features.
+The sticking point we have, and what was behind my question about acceptability to the pipeline developer community last week, is that there are some performance-related issues that are inherent to the client-server architecture, and that would require significant engineering to address (e.g., by moving more of the data and computation to the client, or by doing more cacheing of likely-to-be-requested data). That engineering is not inconceivably difficult - Trey thinks about this kind of stuff all the time - but it may be a disproportionate amount of work compared to the perceived near-term benefit. (edited)
+In some cases this is behind the difficulty in addressing what may at first sight appear to be simple UI issues. Merlin asked me, for instance, if we could connect the mouse scroll wheel UI events to the zoom-in and zoom-out actions. Just doing that is (I assume - I'm not a hard-core Javascripter yet) nearly trivial, but it would probably not yield a good UX, because the system is not designed to handle the high rates of actions that would produce.
+So Merlin's take on the situation is that very fluid interactive response to zooming - and to rescaling - are more important to him than ``features'' like the mask-plane overlay controls (which he still really likes), and that as a result he's likely to prefer staying with DS9 in preference to starting to use Firefly in his daily work.
 
-\subsection{``Tony Johnsons's Viewer''}
+(To re-emphasize another earlier point: this is, and should be, totally OK, a choice up to individual developers, and a key motivation to have a ``neutral'' API like `afw.display` in the system. We're not trying to mandate tool use, but to decide where we can get the greatest net benefit to the user community from any additional LSST-funded tool development.) (edited)
+
+We have been gradually making changes to improve the responsiveness of the UI by moving work from the server to the client - for instance, rotations are now done client-side and are really fast - but this is ``big'' work that is probably not realistically doable within the post-descope constraints - and also is not driven strongly by Firefly's other IPAC-side applications. (edited)
+From the WG point of view, then, I think we need to understand how this ``fluid response? issue rates in the priorities of the user communities we have. That will then help us assess where best to invest resources. (edited)
+(end of essay)
+
+
+\subsection{Ginga (+Astrowidgets}
+\yusra{TO DO: Chris or Yusra}
+Things Chris learned at Python in Astronomy, plus a day's worth of experimenting.
+Have not yet got \texttt{display\_ginga} working.
+Chris has written a quick (~1 hour effort) GUI for interacting with the Ginga display in a notebook; looks pretty slick!
+Can display mask planes, by adopting code from (but not integrating with) \texttt{display\_ginga}.
+Add regions by clicking on the image; get the results through Python callbacks.
+Understands FITS headers; can access them.
+Which can actually be populated by metadata provided by the code; it doesn't have to be header.
+Not clear what the semantics of this should be.
+One could imagine extending afwDisplay with some generic notion of image metadata.
+There are handy keybindings.
+AstroWidgets acts largely as a wrapper around Ginga.
+Chris is working on a way of panning through multiple frames.
+Continuing development of AstroWidgets; they claim to now support all of the DS9 region types.
 
 \subsection{JS9}
 
+\yusra{TO DO: Simon}
+Eric Mandel actively developing.
+Hard to do mask overlays, due to fundamental differences between how DS9 and JS9 handle multiple images in the same app.
+Not clear what the multi-client environment is like ? one monolithic server with many clients, or each client spawning its own server?
+But note that there may be constraints on this because the browser and the python interpreter would need to have access to the same environment.
+As far as we understand at the moment, matching the sort of mask overlay that we currently have in Firefly/DS9 isn't possible.
+But that may just be a matter of not fully understanding JS9's capabilities.
+The pyjs9 client library wraps a RESTful API exposed by the server.
+
+
+\subsection{LSST Camera Image Viewer}
+\yusra{TO DO: John}
+
+That is, "Tony Johnson's viewer?.
+https://lsst-camera-dev.slac.stanford.edu/FITSInfo/
+It currently shows raft-level images (but see below).
+The viewer is based on OpenSeadragon.
+An ``open-source web-based viewer for high-resolution zoomable images, implemented in pure JavaScript?.
+Images are fetched using the International Image Interoperability Framework (IIIF).
+This is an open standard; pretty sure it is implemented in this case by Cantaloupe running under Jetty.
+Image data is read directly from FITS files on the server side.
+It is tiled and delivered to the client as JPEGs.
+In theory, the IIIF protocol can support other delivery formats, but they don't seem to be used by the Camera Image Viewer.
+The OpenSeadragon / IIIF system has no understanding of a coordinate system beyond pixels (and, with a plugin, a scale factor to a physical unit). It does not (as far as I can see) enable you to e.g. project astronomical coordinates.
+It is possible to both read and manipulate RGB values of individual pixels.
+There are plugins which enable one to do things like thresholding, convolution, applying a colormap.
+If it's possible to combine pixels from different images (e.g. to build an RGB composite), it is not obvious how.
+Doesn't look as though OpenSeadragon can do this itself, but it may be possible to use it to collect pixel data from multiple images, then write your own Javascript to generate the composite.
+It is possible to add annotations and overlays to images using OpenSeadragon.
+The Camera Image Viewer uses this to label detectors and amplifiers.
+There are variety of plugins for various different sorts of canvas, which fall outside my Javascript/HTML5 understanding, but which I imagine would make it straightforward to draw masks, footprints, overlay catalogs, etc.
+Future plans for extension of the Camera Image Viewer include:
+Live update (automatically show the latest image taken)
+Display the full focal plane
+Show data about pixel values over which the mouse is moving
+Add more colorization/stretch options
+Bias subtraction
+FITS header viewer
+Ability to flag ``favourites?
+(Which I assume means ``images of particular interest?, rather than sources/regions).
+Tony's image display goals (slide stolen from him!):
+
+Tony's summary of the current system (hey, I was right, it is Cantaloupe!):
+
+And thoughts on user requests (it's not clear that all of these can/will be implemented):
+
+And what they are currently working on:
+
+Extra notes:
+They are currently not set up to read arbitrary FITS files: the FITS reader extension to Cantaloupe is very specific to the Camera raw format. It might be possible to change that to look at science images, but that's not something that's currently on their roadmap.
+Many operations require going back to the raw pixel data, so that changing visualization settings on the sky really puts significant load on the storage backend. They have a fairly monstrous system to support this.
+
 \subsection{HscMap}
+
+\yusra{TO DO: Lauren}
+Asked for feedback from Subaru/HSC to see if they have any inputs.
+They sent some documentation videos!
+http://hscmap.mtk.nao.ac.jp/hscMap4/app/help.html
+http://hscmap.mtk.nao.ac.jp/hscMap4/jupyterlab-hscmap/docs/
+https://hscmap.mtk.nao.ac.jp/hscMap4/app/
+But no real user feedback.
+The data is postprocessed before being fed to HscMap.
+Which helps explain the speed.
+``Full sky almost to pixel level''.
+Lupton-sanctioned colours!
+Can change colormap of pre-computed images, not on the original data.
+``The algorithm is applied post-stretch''.
+Interfaces with a database for catalog queries.
+Can add your own images and CSV format catalogs.
+Would be really useful to simply visualize the whole LSST sky.
+Can be incorporated into JupyterLab.
+But it's not clear how deep this integration goes.
+Suspect there is no mask overlay support.
+Chief selling-points are speed and colours, together with ability to overplot objects from a database.
+We do not know what the backing format is; we know it used not to be HiPS, but that may have changed.
 
 \subsection{Aladinlite}
 
@@ -29,3 +131,30 @@ image data to the scientific community, it is unlikely to be helpful during the
 process of commissioning the LSST hardware and software.
 
 \subsection{Miscellaneous}
+\subsubsection{ExpViewer}
+\yusra{TO DO: John}
+That is, ``Luiz da Costa's viewer''.
+http://expviewer.linea.gov.br
+The basic use case here is to display a ``preview'' image of the full focal plane as data is received from the camera.
+As such, it already supports full focal plane (not just raft, as above) display.
+And in default mode it ``updates'' every few seconds as a new image is received.
+Not the same system as the Camera Image Viewer, above ? they have been developed completely separately.
+Although there is some suggestion that it'd be neat if ExpViewer could read from the same IIIF backend; not currently clear if that's a realistic possibility or just idle speculation.
+However, this also uses the OpenSeadragon system, so much of the above discussion applies directly.
+The code is harder for me to read, though, so it's harder to comment on the details of the implementation.
+(That's not necessarily a comment on the quality of the code ? I am no Javascript programmer, an
+d I think it has been packed efficiently to minimize space.)
+ExpViewer uses TIFFs on the back-end, rather than reading directly from FITS.
+It's not clear where or how that conversion is happening.
+There's a proposal from the group in Brazil to provide a tool for commenting on images (a variation on the DES ?Tile Inspector?), but it's not clear what that'll actually amount to ? possibly just extending Tony's tool to add a commenting facility.
+ExpViewer design overview, courtesy of Luiz.
+
+\subsubsection{WorldWideTelescope}
+\yusra{TO DO: yusra}
+Peter Williams / WorldWideTelescope integrated HSC data with HSC.
+Used a tiling scheme named TOAST; and a tool named toasty(?)
+Took about 15 minutes to process a tract, but could likely be made faster with effort.
+Addresses the whole sky visualization use case.
+
+
+\yusra{TO DO: format feature vs. tool table (Yusra)}
