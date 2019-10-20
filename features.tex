@@ -25,24 +25,32 @@ The first of these is implemented already
 Second - requires work on the table format of for the data. Moving to an obsCore interface. Functionality overlaps portal and firefly
 
 
-
 \subsection{Full Focal Plane Visualization}
-\label{sec:large_viz}
-\yusra{Thank you Scott for the draft. TO DO: John Edit}
-Commissioning, Camera, and DRP expressed interest in being able to load a full focal plane and zoom continuously
-from a large scale view down to pixel-level images.  In order to make pixel-level information useful, any
-viewer will also need to support overplotting of mask planes.
+\label{sec:features:focal_plane}
 
-Tony Johnson's image viewer, developed for the camera team, currently supports raft-level images and could be
-extended to support full focal planes.  Luis da Costa has also developed a large scale viewer to handle preview
-data as it comes off the camera.  This viewer can handle full focal planes.  There is talk of combining the
-development effort on these two tools.
+The Commissioning, Camera and Data Release Production teams expressed a requirement for visualizing the full focal plane.
+Key aspects of this requirement include:
 
-There are third party packages that can do large scale image
-visualization, but these involve resampling images onto some dynamic pixellization of the sky (i.e.HEALPIX) and
-thus, on some level, erase the information contained in individual LSST pixels.  The principal barrier to just
-adopting Tony Johnson's image viewer is that it is enabled my a massive hardware investment, which may make it
-prohibitive for hundreds of users to be viewing hundreds of focal planes simultaneously.
+\begin{itemize}
+
+  \item{A ``zoomed out'' overview of the focal plane should be displayed;}
+  \item{The user can select and zoom in to particular areas of interest;}
+  \item{As the user zooms, data is loaded at progressively higher levels of resolution;}
+  \item{Ultimately, at a high enough zoom level, the user can examine the values of individual pixels.}
+
+\end{itemize}
+
+Note that this functionality is only of interest if it is accompanied by the ability to overplot mask planes on the data (\S\ref{sec:features:masks}).
+
+Two tools are currently under development in the LSST ecosystem which may address this requirement: the Camera Image Viewer (\S\ref{sec:existing_tools:camera}) and ExpViewer (\S\ref{sec:existing_tools:misc:expviewer}).
+Note, however, that both of these currently rely on compressed image data, so it may not be possible to use them to accurately recover the values of individual pixels.
+Furthermore, loading and transmitting full focal plane images is expensive in terms of I/O bandwidth.
+
+Third party packages which can address image visualization at the scale of an LSST focal plane exist.
+However, these involve resampling images onto a particular sky tessellation.
+For example, the Hierarchical Progressive Survey (HiPS) standard \citep{2017ivoa.spec.0519F} requires that data be resampled on to the HEALPix \citep{gor05}.
+This makes it impossible to recover individual LSST pixels from the resampled data.
+
 
 \subsection{Mark and save positions on images}
 
@@ -110,6 +118,7 @@ User stories
 
 
 \subsection{Overlay Maps/Masks}
+\label{sec:features:masks}
 \yusra{Thank you Scott for the draft. TO DO: Gregory edits}
 
 Commissioning, AP, and SST specifically requested the ability to layer images on
