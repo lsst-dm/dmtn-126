@@ -45,6 +45,7 @@ The pyjs9 client library wraps a RESTful API exposed by the server.
 
 
 \subsection{LSST Camera Image Viewer}
+\label{sec:existing_tools:camera}
 
 The LSST Camera Team has developed a bespoke image viewing tool to support their activities.
 As such, it is primarily aimed at examining raw pixel data recorded from the camera to diagnose hardware issues.
@@ -166,22 +167,19 @@ process of commissioning the LSST hardware and software.
 
 \subsection{Miscellaneous}
 \subsubsection{ExpViewer}
-\yusra{TO DO: John}
-That is, ``Luiz da Costa's viewer''.
-http://expviewer.linea.gov.br
-The basic use case here is to display a ``preview'' image of the full focal plane as data is received from the camera.
-As such, it already supports full focal plane (not just raft, as above) display.
-And in default mode it ``updates'' every few seconds as a new image is received.
-Not the same system as the Camera Image Viewer, above ? they have been developed completely separately.
-Although there is some suggestion that it'd be neat if ExpViewer could read from the same IIIF backend; not currently clear if that's a realistic possibility or just idle speculation.
-However, this also uses the OpenSeadragon system, so much of the above discussion applies directly.
-The code is harder for me to read, though, so it's harder to comment on the details of the implementation.
-(That's not necessarily a comment on the quality of the code ? I am no Javascript programmer, an
-d I think it has been packed efficiently to minimize space.)
-ExpViewer uses TIFFs on the back-end, rather than reading directly from FITS.
-It's not clear where or how that conversion is happening.
-There's a proposal from the group in Brazil to provide a tool for commenting on images (a variation on the DES ?Tile Inspector?), but it's not clear what that'll actually amount to ? possibly just extending Tony's tool to add a commenting facility.
-ExpViewer design overview, courtesy of Luiz.
+\label{sec:existing_tools:misc:expviewer}
+
+ExpViewer is being developed by a team led by Luiz da Costa in Brazil to provide rapid display of image data received from the camera in the operational era.
+A preview version is currently available online at \url{http://expviewer.linea.gov.br}.
+
+ExpViewer is built upon the same International Image Interoperability Framework as the Camera Image viewer (\S\ref{sec:existing_tools:camera}), and also makes use of OpenSeadragon for in-browser display.
+However, rather than directly reading data from FITS stored on disk, images are converted to TIFF format when they are ingested by the tool.
+
+ExpViewer and the Camera Image Viewer have a lot in common, but, at time of writing, the Camera Image Viewer provides a wider range of functionality, while ExpViewer provides a simpler and (arguably) more attractive user interface.
+The WG understands that discussions are ongoing between the ExpViewer and Camera Image Viewer teams to identify commonalities, avoid duplication, and increase collaboration, but outcomes of this are currently unclear.
+
+Given its ability to work with FITS data (albeit in the camera raw specific form) and its rapid pace of development, the WG suggests that the Camera Image Viewer provides a more attractive tool for potential adoption by DM.
+
 
 \subsubsection{WorldWideTelescope}
 \yusra{TO DO: yusra}
