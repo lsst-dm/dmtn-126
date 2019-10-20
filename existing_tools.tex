@@ -45,46 +45,80 @@ The pyjs9 client library wraps a RESTful API exposed by the server.
 
 
 \subsection{LSST Camera Image Viewer}
-\yusra{TO DO: John}
 
-That is, "Tony Johnson's viewer?.
-https://lsst-camera-dev.slac.stanford.edu/FITSInfo/
-It currently shows raft-level images (but see below).
-The viewer is based on OpenSeadragon.
-An ``open-source web-based viewer for high-resolution zoomable images, implemented in pure JavaScript?.
-Images are fetched using the International Image Interoperability Framework (IIIF).
-This is an open standard; pretty sure it is implemented in this case by Cantaloupe running under Jetty.
-Image data is read directly from FITS files on the server side.
-It is tiled and delivered to the client as JPEGs.
-In theory, the IIIF protocol can support other delivery formats, but they don't seem to be used by the Camera Image Viewer.
-The OpenSeadragon / IIIF system has no understanding of a coordinate system beyond pixels (and, with a plugin, a scale factor to a physical unit). It does not (as far as I can see) enable you to e.g. project astronomical coordinates.
-It is possible to both read and manipulate RGB values of individual pixels.
-There are plugins which enable one to do things like thresholding, convolution, applying a colormap.
-If it's possible to combine pixels from different images (e.g. to build an RGB composite), it is not obvious how.
-Doesn't look as though OpenSeadragon can do this itself, but it may be possible to use it to collect pixel data from multiple images, then write your own Javascript to generate the composite.
-It is possible to add annotations and overlays to images using OpenSeadragon.
-The Camera Image Viewer uses this to label detectors and amplifiers.
-There are variety of plugins for various different sorts of canvas, which fall outside my Javascript/HTML5 understanding, but which I imagine would make it straightforward to draw masks, footprints, overlay catalogs, etc.
-Future plans for extension of the Camera Image Viewer include:
-Live update (automatically show the latest image taken)
-Display the full focal plane
-Show data about pixel values over which the mouse is moving
-Add more colorization/stretch options
-Bias subtraction
-FITS header viewer
-Ability to flag ``favourites?
-(Which I assume means ``images of particular interest?, rather than sources/regions).
-Tony's image display goals (slide stolen from him!):
+The LSST Camera Team has developed a bespoke image viewing tool to support their activities.
+As such, it is primarily aimed at examining raw pixel data recorded from the camera to diagnose hardware issues.
+This viewer is being developed by Tony Johnson (SLAC); much of the material below is adapted from his comments.
+Given the rapid pace of ongoing development, some of the discussion below may soon (or already) be outdated.
 
-Tony's summary of the current system (hey, I was right, it is Cantaloupe!):
+The current version of the Camera Image Viewer is available on the web at \url{https://lsst-camera-dev.slac.stanford.edu/FITSInfo/}.
 
-And thoughts on user requests (it's not clear that all of these can/will be implemented):
+\subsubsection{Capabilities}
 
-And what they are currently working on:
+Given its audience and goals, it does not provide facilities which are require for astronomical analysis of the data.
+For example, the viewer has no concept of world coordinate system: it simply operates in focal plane pixel coordinates.
 
-Extra notes:
-They are currently not set up to read arbitrary FITS files: the FITS reader extension to Cantaloupe is very specific to the Camera raw format. It might be possible to change that to look at science images, but that's not something that's currently on their roadmap.
-Many operations require going back to the raw pixel data, so that changing visualization settings on the sky really puts significant load on the storage backend. They have a fairly monstrous system to support this.
+Instead, the viewer is designed to provide high-performance interactive display of images corresponding to a full focal plane or subsections thereof.
+The development plan prioritizes:
+
+\begin{itemize}
+
+  \item{A web-based interface for selecting and accessing data;}
+  \item{Scaling from full focal-plane to individual amplifiers, with real-time panning and zooming;}
+  \item{The ability to select, display and analyze regions by hardware device (e.g. particular CCDs, amplifiers, etc.);}
+  \item{The ability to perform hardware diagnostic functions on the selected image region;}
+  \item{The ability to trigger DM algorithms to run on the selected region;}
+  \item{The ability to track and overlay the values of diagnostic measurements with time.}
+
+\end{itemize}
+
+At time of writing, not all of this functionality is currently available.
+
+\subsubsection{Implementation details}
+
+The tool consists of two separate pieces (the ``browser'' and the ``viewer'').
+The former is a relatively simple web front end to the Camera image database which enables the user to select data of interest.
+The latter is more technically interesting, as it must cope with the technical challenge of making available extremely large quantities of image data to the user in a fast, interactive way.
+
+The viewer is based on the International Image Interoperability Framework\footnote{\url{https://iiif.io}} (IIIF), which defines a standardized API for making image data available on the web at scale.
+A primary advantage of this is that existing open-source software is used as the basis of the system.
+In particular, the Camera Image Viewer is based on:
+
+\begin{itemize}
+
+  \item{Cantaloupe\footnote{\url{https://cantaloupe-project.github.io}}, a server-side system for reading image data from storage and providing it to clients using IIIF standards;}
+  \item{OpenSeadragon\footnote{\url{https://openseadragon.github.io}}, a browser-based Javascript library for receiving and displaying image data.}
+
+\end{itemize}
+
+Both of these tools provide for extensive customizability.
+In particular, Cantaloupe has been extended to read data from the FITS files delivered by the camera, while OpenSeadragon is being extended to provide the various user-facing interaction and analysis facilities which are required.
+
+It is worth noting that, although data is stored on the server in FITS format, it is converted to JPEG for transmission to the client.
+It is therefore lossily compressed: the original pixel values are not directly available in the image stream.
+
+Also note that --- regardless of the software system used --- loading and displaying full-focal-plane data at a low enough latency to provide a satisfactory interactive experience places a substantial load on the back-end storage system.
+This will, of course, scale with the number of clients accessing the system, but one should expect to make a significant investment in hardware underlying the image viewer.
+
+\subsubsection{Application to DM use cases}
+
+The Camera Image Viewer provides an impressively high-performance interactive visualization of the full focal plane in a way that is not easily available through other tooling.
+As such, it is of obvious value to the DM Subsystem.
+
+However, the are a number of important limitations:
+
+\begin{itemize}
+
+  \item{The viewer does not have any concept of astronomical coordinate systems or of reprojecting data onto the celestial sphere;}
+  \item{The level of analytic functionality currently available is limited, although more is in development;}
+  \item{Integration with DM standard display interfaces (\texttt{afw.display}, etc) seems challenging;}
+  \item{The current system is tightly coupled to the raw FITS images being produced by the camera: it would require substantial work to access processed data from a Butler repository.}
+
+\end{itemize}
+
+Deploying the system as it now stands at the Data Facility would require some investment in both hardware, to provide the low-latency data access required, and in development, to make it possible to retrieve and display data from Butler repositories rather than just camera raw FITS files.
+However, making this investment would provide DM with a critical capability that is not easily available from elsewhere.
+
 
 \subsection{HscMap}
 
