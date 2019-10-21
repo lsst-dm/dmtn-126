@@ -5,25 +5,19 @@ Can you do it already on lsst-dev? If yes, how? If not, how much work would it b
 Can you do it already on LSP? If yes, how? If not, how much work would it be to make it possible?
 }
 
-\subsection{All-sky viz}
+\subsection{All-Sky Visualization}
 \yusra{TO DO: Lauren}
- Full sky viz for the area covered per night.  Overlay on full sky viz. Accumulated N of visits on the full sky. Wished for during ops rehearsal.
-Where the fields fall in the sky (galaxy, solar system, RA/dec)  (current: hscMap for HSC, doesn't  exist for LSST)
-HscMap https://hscmap.mtk.nao.ac.jp/hscMap4
+High on the priority list for surveys (such as LSST) with a large footprint on the sky is a tool enabling a visualization of the (to-be) observed area on the full sky covered over some time period (e.g. per night, survey-to-date).  For example, one might like to overlay the instrument footprint of all the single-epoch images accumulated to-date or in a given time period and be able to visualize their on-sky RA/Dec positions with respect to common celestial objects/reference points (e.g. the Milky Way galaxy, the Solar System and its members, constellations, Messier objects, other surveys, etc.)
 
-Visualization of all-sky "stuff" (a/k/a statistics, e.g., MAF metrics)
-This is the display of quantities that are evaluated across the entire (LSST-observed) sky and are desirable to be able to explore at a range of scales from all-sky down to the finest-grained level at which they are defined.
-KB: This becomes more important with LSSTCam and particularly the SV surveys when we start having larger contiguous regions of sky coverage.
+Specifically, this could include functionality to both:
+\begin{itemize}
+  \item{display a nominal focal plane footprint at any desired location on the sky, e.g., for use in understanding planned observations; and}
+  \item{display over a coadd the outlines of the single-epoch images used to generate the coadd, or of all the single-epoch images that contain a given source.}
+\end{itemize}
 
-Instrument footprint on all sky (or all-sky) images
-This could mean both:
-display a nominal focal plane footprint at any desired location on the sky, e.g., for use in understanding planned observations; and
-display over a coadd the outlines of the single-epoch images used to generate the coadd, or of all the single-epoch images that contain a given source.
+It would also be desirable to be able to display information associated with the footprints of interest (e.g. single-epoch statistics, MAF metrics).  This would include quantities that are evaluated across the entire (LSST-observed) sky and it would be desirable to have the ability to explore them at a range of scales; from all-sky down to the finest-grained level at which they are defined.  It was noted that this becomes increasingly important in the context of LSSTCam and particularly the Science Validation surveys when larger contiguous regions of sky coverage start to emerge.
 
-BS: 1 (nominal footprint with some catalog of bright sources i.e. "finding chart")
-The first of these is implemented already
-Second - requires work on the table format of for the data. Moving to an obsCore interface. Functionality overlaps portal and firefly
-
+At the time of writing, such a capability does not exist specifically for LSST, although some of the desired functionality does overlap with those provided by Firefly (see, e.g. \citep{2016AAS...22734806D}).  The hscMap viewing tool developed for the HSC-SSP (see \S\ref{sec:existing_tools:hscMap}, \url{https://hscmap.mtk.nao.ac.jp/hscMap4}) provides some of this functionality for all-sky survey footprint visualization.
 
 
 \subsection{Full Focal Plane Visualization}
@@ -185,14 +179,15 @@ Example: There are lots of moving objects in images of any depth.  To find them 
 Camera team are heavy users of ds9's  "smoothing."
 Science Pipelines Team are also heavy users of ds9 smoothing.
 
-\subsection{Mouse over WCS/Pixel}
+\subsection{Mouseover Effects}
 \yusra{TO DO: Lauren}
-
-Image info. Stats on regions
-
-Position of mouse in WCS and image coords
-Pixel value under mouse
-
+The ability to have a (selectable) set of values and properties displayed on mouseover of a given position is highly desirable.  Examples include (but are certainly not limited to):
+\begin{itemize}
+\item{Image information: id, observation date \& pointing, type, exposure time, etc.;
+\item{Position of mouse in WCS (RA/Dec) and image (pixel) coords;
+\item{Pixel value under mouse;}
+\item{Pixel S/N under mouse (assuming a variance plane is available).}
+\end{itemize}
 
 \subsection{Dynamic stretch}
 \yusra{TO DO: Simon}
@@ -246,36 +241,22 @@ KB: Bokeh / holoviews / datashader offers much of this capability, for example
 CFC: PyVis tools does this.
 KB: Brushing and linking between matplotlib plots and python objects in a notebook is definitely important. In addition, it would be really useful to be able to examine an image (e.g., in Firefly), overlay catalog objects, select objects of interest, and then be able to access that selection from a notebook. In other words, I am asking for a linkage between pixel-level images, object catalogs, and the notebook aspect.
 
-\subsubsection{Catalog integration}
+\subsubsection{Catalog Integration}
 \yusra{TO DO: Lauren}
-overlay catalogs (markers with additional information beyond coordinates)
+An obvious desire for a viewer associated with images with which any type of object catalog can be associated (e.g. catalogs specifically created for the image through image processing pipelines, external reference catalogs, etc.) would be the ability to overlay the catalogs on the image itself.  There should be a two-way ability to click on a source in an image or catalog and get associated catalog-level data or zoom to associated position on the image, respectively.  Hovering the mouse on a source should pop up useful metadata about that source.
 
-Selection of catalogs in the image viewer
-Ability to click on a source/pixel in an image and get associated catalog-level data
-Plot data about sources from a catalog on top of an image
-Hover over things and learn fun metadata facts
-e.g. anything from the visitInfo about an image or anything from an associated catalog/database about a source (intentionally left this vague because I'm sure different people want different things)
+Sub-selections of data points should be possible via mouse-clicking tools (e.g. single and shift clicking, rectangular and other geometric shapes, ``roping'') or an SQL-like querry to the database serving the catalog.  There should be numerous operations that can be executed on any seleciton of data points:
+\begin{itemize}
+\item{produce scatter plots and histograms of any columns in the catalog;}
+\item{produce quiver plots when field vector values are provided as columns in the catalog (particularly useful in assessing calibration data, astrometric residuals, PSF moment residuals, engineering facilities measurements, etc.);}
+\item{basic statistical calculations of the sample properties;}
+\item{highlighting of sources with certain catalog-based characteristics (e.g. S/N threshold, flags set, etc.);}
+\item{ability to save/reload any sub-selection as an external catalog.}
+\end{itemize}
 
-Turn on and off detection entries in tables, plots based on flags (i.e. with checkboxes)
-Applies to any LSST catalog entry with packed Boolean flag fields, including Source, Object, ...
-These flag selections are meant to participate in whatever more general brushing and linking environments are provided - e.g., to permit sources/objects with designated flags to be shown or hidden in, say, a color-color plot or in an overlay over an image.
 
-\subsubsection{Flipbooks per source}
+\subsubsection{Per-Source/Position Flipbooks}
 \yusra{TO DO: Lauren}
-Thumbnails across time (lightcurves), surveys  (current: matplotlib
-Quick cutouts of warp, to  look at input images that went into a coadd,
-Build mosaics of many images/dataIds on the fly
-Collections of thumbnails
-Meant to be around a designated set of objects or sources (if sources, this could be a time-dependent selection of apparitions of the same object).
+In most cases when viewing and assessing a given image, there also exists myriad image/template types corresponding to the image of interest (and each other) in a spatial sense.  An obvious example would be the set of individual input images contributing to a given coadd image.  The ability to produce and display on-the-fly various flavors of a ``flipbook'' consisting of cutouts centered on a given source or RA/Dec from all the images related in some way to the source/position of inerest would be a great asset.  Such a flipbook would be particularly useful in the context of time-variable phenomena such as supernova (lightcurves), moving objects (trajectories), and image quality variations (e.g. seeing variability, cosmic-ray and other unmasked/interpolated cosmetic defects, high levels of extinction, etc.)  Per-source flipbooks are understood to be temporal in nature.  An automated (but also set-able) definition of cutout dimensions could be based on source properties (e.g. based on size or detection footprint, possibly of the parent for blended sources).
 
-Flip-books per source
-Understood to be temporal in nature. Display of image cutout flip-books for selected sources. Automatic definition of default cutout dimensions based on source properties (e.g., smaller for point like sources, larger for extended sources, perhaps including the full parent footprint for deblended sources). Flip books for (raw, calibrated, etc.) flux images; for source models computed for each epoch; for residuals (e.g. from difference imaging vs. templates, or image-to-model residuals, where the model could be per-epoch or time-integrated).
-BS: 2 (definitely needed for difference imaging diagnostics)
-
-\subsubsection{Overlay Vector Fields}
-\yusra{TO DO: Lauren}
-Overlay a vector field, both for the CBP data, and for people doing astrometric matching or looking at distortions.
-Vector field plots (e.g., astrometric residuals,PSF moments or other technical information from the EFD)
-The scale factor must be adjustable.
-KB: matplotlib quiver plots, for example? We definitely need something along those lines for astrometric residuals and PSF characterization
-CFC: This seems like something that a visualization would be used to display, but the computation of the vector/quivers is external to the display tool.
+One could also imagine the creation of flipbooks for various categories of flux images (raw, post-ISR, calibrated, etc.) to visualize the effects of the various calibration phases.  Flipbooks of source models computed for each epoch would also be informative.  In the aid of model fitting characterization and difference imaging diagnoses in particular, flipbooks of image and model residuals (individual and/or coadd image minus templates, image-to-model residuals, where the model could be per-epoch or time-integrated) would be an invaluable quality assessment tool.
