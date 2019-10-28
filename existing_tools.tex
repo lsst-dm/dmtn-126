@@ -16,7 +16,7 @@ From the WG point of view, then, I think we need to understand how this ``fluid 
 (end of essay)
 
 
-\subsection{Ginga (+Astrowidgets}
+\subsection{Ginga and Astrowidgets}
 \yusra{TO DO: Chris or Yusra}
 Things Chris learned at Python in Astronomy, plus a day's worth of experimenting.
 Have not yet got \texttt{display\_ginga} working.
@@ -31,6 +31,12 @@ There are handy keybindings.
 AstroWidgets acts largely as a wrapper around Ginga.
 Chris is working on a way of panning through multiple frames.
 Continuing development of AstroWidgets; they claim to now support all of the DS9 region types.
+
+Ginga and Astrowidgets both attempt to supply toolkits for image display, instead of a full-featured program like DS9.  The standalone ginga program is referred to in the documentation as a ``reference viewer,'' which displays an example interface that can be built.  The API does not have communication abilities outside the scope of the program, so there is no DS9/XPA like interface to either the reference viewer or to any notebook based viewer.  The stack includes `lsst.afw.display.ginga`, which in a notebook environment can communicate with the viewer in that environment, but the lack of inter-process communication prevents `lsst.afw.display.ginga` from functioning as a debug display for command-line tasks.
+
+The Ginga viewer supports directly loading FITS files as well as arbitrary numpy arrays of data.  The keyboard and mouse handling is enabled when the viewer is constructed in a notebook, and is connected to simple image operations: zooming, panning, image scaling, contrast, colormaps, axes flips, and rotation.  There are python API callbacks to all of these, with ``get'' and ``set'' methods.  Astropy regions are supported, and likewise have ``add'' and ``delete'' methods to the internal catalog.  Headers and WCS objects are supported, with `lsst.afw.display.ginga` having a WCS translator to map between the LSST and ginga interfaces.  Mask overlays are supported, although not with a simple API.
+
+Astrowidgets is an additional layer of helper code on top of the Ginga viewer, supplying a friendlier interface to the viewer while also connecting more explicitly to the ipywidgets widgets.  This interface can be used to construct a DS9-like experience with buttons, sliders, and text boxes to control the viewer.  The tutorial example adds a X/Y/RA/DEC/image value box to track mouse positions in real time.  Astrowidgets is in early development, so there is not much beyond the wrappers for the Ginga built in code.  However, it is easy to work with, as demonstrated by adding a method to load an `lsst.afw.exposure` object its respective WCS and mask planes.  Multiple frames are not cleanly supported with either interface, but the astrowidgets methods can connect an array of images to the viewer via widgets that provide information about the current image being displayed.
 
 \subsection{JS9}
 
