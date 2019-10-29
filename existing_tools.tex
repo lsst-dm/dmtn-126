@@ -1,36 +1,26 @@
-\yusra{Can I imagine writing an \texttt{afwDisplay} for this tool? Do they fulfill any use cases}
+% Can I imagine writing an \texttt{afwDisplay} for this tool? Do they fulfill any use cases
 
 \subsection{Firefly}
-\yusra{TO DO: Gregory}
+% TO DO: Gregory Edits
 
-Gregory says on Slack:
-It's easy to imagine adding a wide variety of new features to Firefly at relatively modest cost, especially, as I mentioned in the meeting last week, ones that mainly involve writing more `afw`-oriented Python interfaces to existing features.
-The sticking point we have, and what was behind my question about acceptability to the pipeline developer community last week, is that there are some performance-related issues that are inherent to the client-server architecture, and that would require significant engineering to address (e.g., by moving more of the data and computation to the client, or by doing more cacheing of likely-to-be-requested data). That engineering is not inconceivably difficult - Trey thinks about this kind of stuff all the time - but it may be a disproportionate amount of work compared to the perceived near-term benefit. (edited)
-In some cases this is behind the difficulty in addressing what may at first sight appear to be simple UI issues. Merlin asked me, for instance, if we could connect the mouse scroll wheel UI events to the zoom-in and zoom-out actions. Just doing that is (I assume - I'm not a hard-core Javascripter yet) nearly trivial, but it would probably not yield a good UX, because the system is not designed to handle the high rates of actions that would produce.
-So Merlin's take on the situation is that very fluid interactive response to zooming - and to rescaling - are more important to him than ``features'' like the mask-plane overlay controls (which he still really likes), and that as a result he's likely to prefer staying with DS9 in preference to starting to use Firefly in his daily work.
+Firefly has been the default fits viewer for the notebook environment. 
 
-(To re-emphasize another earlier point: this is, and should be, totally OK, a choice up to individual developers, and a key motivation to have a ``neutral'' API like `afw.display` in the system. We're not trying to mandate tool use, but to decide where we can get the greatest net benefit to the user community from any additional LSST-funded tool development.) (edited)
+It has more features than any other tool evaluated. 
 
-We have been gradually making changes to improve the responsiveness of the UI by moving work from the server to the client - for instance, rotations are now done client-side and are really fast - but this is ``big'' work that is probably not realistically doable within the post-descope constraints - and also is not driven strongly by Firefly's other IPAC-side applications. (edited)
-From the WG point of view, then, I think we need to understand how this ``fluid response? issue rates in the priorities of the user communities we have. That will then help us assess where best to invest resources. (edited)
-(end of essay)
+It already has a robust \texttt{lsst.afw.display} and is used in pipelines tutorials. 
 
+It's easy to imagine adding a wide variety of new features to Firefly at relatively modest cost, especially, ones that mainly involve writing more `afw`-oriented Python interfaces to existing features.
+The sticking point is that there are some performance-related issues that are inherent to the client-server architecture, and that would require significant engineering to address (e.g., by moving more of the data and computation to the client, or by doing more cacheing of likely-to-be-requested data).
+That engineering is not inconceivably difficult  but it may be a disproportionate amount of work compared to the perceived near-term benefit. 
 
-\subsection{Ginga and Astrowidgets}
-\yusra{TO DO: Chris or Yusra}
-Things Chris learned at Python in Astronomy, plus a day's worth of experimenting.
-Have not yet got \texttt{display\_ginga} working.
-Chris has written a quick (~1 hour effort) GUI for interacting with the Ginga display in a notebook; looks pretty slick!
-Can display mask planes, by adopting code from (but not integrating with) \texttt{display\_ginga}.
-Add regions by clicking on the image; get the results through Python callbacks.
-Understands FITS headers; can access them.
-Which can actually be populated by metadata provided by the code; it doesn't have to be header.
-Not clear what the semantics of this should be.
-One could imagine extending afwDisplay with some generic notion of image metadata.
-There are handy keybindings.
-AstroWidgets acts largely as a wrapper around Ginga.
-Chris is working on a way of panning through multiple frames.
-Continuing development of AstroWidgets; they claim to now support all of the DS9 region types.
+In some cases this is behind the difficulty in addressing what may at first sight appear to be simple UI issues.
+However, implementing some UI features would not yield a good user experience, because the system is not designed to handle the high rates of actions that would produce.
+One feature for example, connecting the mouse scroll wheel UI events to the zoom-in and zoom-out actions, would be trivial to implement but would yield a slower experience. 
+
+Developers had been gradually making changes to improve the responsiveness of the UI by moving work from the server to the client - for instance, rotations are now done client-side and are really fast.
+However, these big system changes are not driven strongly by Firefly's other IPAC-side applications, and continuing this work that is probably not realistically doable within the post-descope constraints.
+
+\subsection{Ginga (+Astrowidgets)}
 
 Ginga and Astrowidgets both attempt to supply toolkits for image display, instead of a full-featured program like DS9.  The standalone ginga program is referred to in the documentation as a ``reference viewer,'' which displays an example interface that can be built.  The API does not have communication abilities outside the scope of the program, so there is no DS9/XPA like interface to either the reference viewer or to any notebook based viewer.  The stack includes `lsst.afw.display.ginga`, which in a notebook environment can communicate with the viewer in that environment, but the lack of inter-process communication prevents `lsst.afw.display.ginga` from functioning as a debug display for command-line tasks.
 
@@ -39,15 +29,18 @@ The Ginga viewer supports directly loading FITS files as well as arbitrary numpy
 Astrowidgets is an additional layer of helper code on top of the Ginga viewer, supplying a friendlier interface to the viewer while also connecting more explicitly to the ipywidgets widgets.  This interface can be used to construct a DS9-like experience with buttons, sliders, and text boxes to control the viewer.  The tutorial example adds a X/Y/RA/DEC/image value box to track mouse positions in real time.  Astrowidgets is in early development, so there is not much beyond the wrappers for the Ginga built in code.  However, it is easy to work with, as demonstrated by adding a method to load an `lsst.afw.exposure` object its respective WCS and mask planes.  Multiple frames are not cleanly supported with either interface, but the astrowidgets methods can connect an array of images to the viewer via widgets that provide information about the current image being displayed.
 
 \subsection{JS9}
+% TO DO: Simon Edits
 
-\yusra{TO DO: Simon}
-Eric Mandel actively developing.
-Hard to do mask overlays, due to fundamental differences between how DS9 and JS9 handle multiple images in the same app.
-Not clear what the multi-client environment is like ? one monolithic server with many clients, or each client spawning its own server?
-But note that there may be constraints on this because the browser and the python interpreter would need to have access to the same environment.
+JS9 (\url{https://js9.si.edu/} is being actively developed by Eric Mandel as a browser-based FITs viewer that reimplements the DS9 interface.
+
+Evaluation:
+It is hard to do mask overlays, due to fundamental differences between how DS9 and JS9 handle multiple images in the same app.
+It is not clear what the multi-client environment is like. Is it more like  one monolithic server with many clients, or each client spawning its own server?
+There may be constraints on this because the browser and the python interpreter would need to have access to the same environment.
 As far as we understand at the moment, matching the sort of mask overlay that we currently have in Firefly/DS9 isn't possible.
 But that may just be a matter of not fully understanding JS9's capabilities.
-The pyjs9 client library wraps a RESTful API exposed by the server.
+
+The \texttt{pyjs9} client library wraps a RESTful API exposed by the server.
 
 
 \subsection{LSST Camera Image Viewer}
@@ -130,7 +123,7 @@ However, making this investment would provide DM with a critical capability that
 
 \subsection{hscMap}
 \label{sec:existing_tools:hscMap}
-\yusra{TO DO: Lauren}
+
 hscMap is an image viewer developed at the National Astronomical Observatory of Japan (NAOJ) with a focus on facilitating the exploration of images from the Hyper Suprime-Cam Subaru Strategic Survey (HSC-SSP).
 The survey aims at a total areal coverage of $\approx$1400 deg$^2$ of multiband (grizy + 4 narrow-bands) imaging to three depth levels in fields spanning a large fraction of the sky visible from Mauna Kea.
 As such, a primary motivating factor was the ability to easily and responsively zoom around and into large areas of the full sky down to the near-pixel level.
@@ -181,13 +174,37 @@ The WG understands that discussions are ongoing between the ExpViewer and Camera
 
 Given its ability to work with FITS data (albeit in the camera raw specific form) and its rapid pace of development, the WG suggests that the Camera Image Viewer provides a more attractive tool for potential adoption by DM.
 
-
 \subsubsection{WorldWideTelescope}
-\yusra{TO DO: yusra}
-Peter Williams / WorldWideTelescope integrated HSC data with HSC.
-Used a tiling scheme named TOAST; and a tool named toasty(?)
-Took about 15 minutes to process a tract, but could likely be made faster with effort.
-Addresses the whole sky visualization use case.
 
+The American Astronomical Society has adopted Microsoft's World Wide Telescope (WWT)
+It is under active development by Peter Williams et al. at the cfa
 
-\yusra{TO DO: format feature vs. tool table (Yusra)}
+It uses a tiling scheme named TOAST.
+There is a tool named toasty, to convert images to the TOAST tiling scheme. 
+
+At Python in Astronomy 2019,  Peter Williams displayed a full tract HSC coadd.
+It took about 15 minutes to process a tract, but could likely be made faster with effort.
+WWT has potential to addresses the whole sky visualization and survey footprint visualization use case. 
+
+A proposal has been submitting to the NSF for funding to better support visualizing full-focal-plane images and full-sky data from telescopes like the LSST.
+
+\subsubsection{des-exp-checker}
+
+This tool is not an image display tool, and outside the scope of this review.
+However, it was referenced in a use case.
+The DES developed a very simple web interface backed with a sqlite database and fits images on a file system.
+It was used to visually inspect images during comissioning to find systematic problems e.g. surfaces that needed black paint.
+
+We reviewed the DESC instance of it used to review data from the  DC2 r2.1i imsim run.
+Users can label image data with problems (e.g. tree rings) that apply at particular positions.
+These are then stored to a SQLite database.
+The masks shown are the actually LSST mask, rendered as opaque color on top of the images, though it was not clear exactly which mask planes are used.
+It is clearly a special-purpose tool, though is imple enough that it is appealing to use for appropriate tasks.
+
+We could envision using it as a tool by DM to inspect images for evaluating Science Pipelines algorithms.
+For example, we could use it to develop a training set for classifying real vs. bogus sources in difference images.
+It would be too much overhead to setup for a single user, but could be used for crowd-sourcing visual inspection of data.
+This addresses one particular set of use cases, but that set of use cases is highlighted as important in the inputs we've collected.
+One might deploy it on e.g. LDF Kubernetes Commons.
+
+% TO DO: format feature vs. tool table (Yusra)}

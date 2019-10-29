@@ -15,7 +15,8 @@ Scott Daniel,
 Gregory Dubois-Felsmann,
 Simon Krughoff,
 Lauren A. MacArthur,
-John Swinbank
+John Swinbank,
+Chris Waters
 }
 
 \setDocRef{DMTN-126}
@@ -121,21 +122,23 @@ Finally, in \S\ref{sec:conc} we present conclusions and recommendations drawn fr
 
 \section{Environments}
 \label{sec:env}
-\yusra{TO DO: Simon}
-There are eight environments in which a DM member would view images.
 
-Simon's table.
+There are different environments in which a DM use would view images.
+Different tools are appropriate for different environments.
 
-Simon's chart in words.
+\begin{itemize}
+\item{\textbf{Laptop:} Have complete freedom of tools, for small amounts of data copied over}
+\item{\textbf{Project dev server (\texttt{lsst-dev})}: Freedom of tools with image data disks mounted and available. X Windows forwarding.}
+\item{\textbf{Science Platform:}  No X windows, need tools for JupyterLab and web.}
+\end{itemize}
 
-We focused on the lsst-dev and Nublado environments, which are partially implemented.
+Therefore it is necessary to specify the environments associated with each recommendation.
+We focused recommendations  on the lsst-dev and especially the Science Platform environments, for which the image display features are only  partially implemented.
 
-DM requested these essential features.
-Features = some action users want to be able to complete or some characteristic of the image viewer.
+DM requested the following  essential features.
+Features are some action users want to be able to complete or some characteristic of the image viewer.
 Use cases are the commissioning,  science validation, pipelines writing tasks that prompt these actions.
-
 Some of these features are currently possible and easy on lsst-dev and Nublado; some are not.
-
 We distinguish between ``possible'' and ``easy.''
 
 \section{Features and User Stories}
@@ -149,7 +152,7 @@ We distinguish between ``possible'' and ``easy.''
 \section{Recommendations}
 \label{sec:conc}
 
-\yusra{TO DO: John, Simon, Lauren, Gregory, Yusra: please review and edit}
+% TO DO: John, Simon, Lauren, Gregory, Yusra: please review and edit
 The recommendations are based on an assessment of the requested features, supporting use cases, and existing toolsets evaluated.
 One currently unsupported feature is large image display.
 Users across DM and commissioning (section \ref{sec:features:focal_plane}) will need to see a full-focal plane or full-tract image in its entirety and be able to zoom in to the individual pixels.
