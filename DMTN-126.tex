@@ -1,6 +1,8 @@
 \documentclass[DM,authoryear,toc]{lsstdoc}
 % lsstdoc documentation: https://lsst-texmf.lsst.io/lsstdoc.html
 
+\newcommand{\yusra}[1]{{\it \textcolor{green}{[YA: #1]}}}
+
 \input{meta}
 
 % To add a short-form title:
@@ -12,8 +14,9 @@ Yusra AlSayyad (chair),
 Scott Daniel,
 Gregory Dubois-Felsmann,
 Simon Krughoff,
-Lauren MacArthur,
-John Swinbank
+Lauren A. MacArthur,
+John Swinbank,
+Chris Waters
 }
 
 \setDocRef{DMTN-126}
@@ -32,6 +35,51 @@ This document describes the findings of the LSST DM Image Display Working Group.
 \setDocChangeRecord{%
   \addtohist{1}{YYYY-MM-DD}{Unreleased.}{Yusra AlSayyad}
 }
+
+
+% Recommendation macro copied from dmtn-085:
+
+
+% Hyperref plays havoc with my crazy recommendation linking TOCs if we let it
+% turn the section name into a hyperlink, so we use the page numbers instead.
+\hypersetup{linktoc=page}
+
+\makeatletter
+\newcommand{\printrecs}{%
+  \section{Recommendations}%
+  \label{sec:recs}
+  \begin{enumerate}[leftmargin=7em,label=QAWG-REC-\arabic*:]%
+  \def\@noitemerr{\@latex@warning{Empty objective list}}%
+  \@starttoc{rec}%
+  \end{enumerate}%
+}
+\newcommand{\l@rec}[2]{#1}
+\newenvironment{recbox}
+{
+  \begin{center}
+  \begin{minipage}[h]{.85\linewidth}
+    \begin{tcolorbox}[colback=green!5!white,colframe=green!75!black,title=\textbf{Recommendation}]
+}
+{
+    \end{tcolorbox}
+  \end{minipage}
+  \end{center}
+}
+%
+% \begin{recommendation}{rec:label}{Brief summary}
+% Explanatory text, if any.
+% \end{recommendation}
+\NewEnviron{recommendation}[2]
+ {%
+  \label{#1}%
+  \addcontentsline{rec}{rec}{%
+    \noexpand\unexpanded{\unexpanded\expandafter{\item{#2 (\S\ref{#1})}}}%
+  }%
+  \begin{recbox}
+  \emph{#2.} \par \BODY%
+  \end{recbox}
+ }%
+
 
 \begin{document}
 
@@ -75,20 +123,22 @@ Finally, in \S\ref{sec:conc} we present conclusions and recommendations drawn fr
 \section{Environments}
 \label{sec:env}
 
-There are eight environments in which a DM member would view images.
+There are different environments in which a DM use would view images.
+Different tools are appropriate for different environments.
 
-Simon's table.
+\begin{itemize}
+\item{\textbf{Laptop:} Have complete freedom of tools, for small amounts of data copied over}
+\item{\textbf{Project dev server (\texttt{lsst-dev})}: Freedom of tools with image data disks mounted and available. X Windows forwarding.}
+\item{\textbf{Science Platform:}  No X windows, need tools for JupyterLab and web.}
+\end{itemize}
 
-Simon's chart in words.
+Therefore it is necessary to specify the environments associated with each recommendation.
+We focused recommendations  on the lsst-dev and especially the Science Platform environments, for which the image display features are only  partially implemented.
 
-We focused on the lsst-dev and Nublado environments, which are partially implemented.
-
-DM requested these essential features.
-Features = some action users want to be able to complete or some characteristic of the image viewer.
+DM requested the following  essential features.
+Features are some action users want to be able to complete or some characteristic of the image viewer.
 Use cases are the commissioning,  science validation, pipelines writing tasks that prompt these actions.
-
 Some of these features are currently possible and easy on lsst-dev and Nublado; some are not.
-
 We distinguish between ``possible'' and ``easy.''
 
 \section{Features and User Stories}
@@ -99,8 +149,49 @@ We distinguish between ``possible'' and ``easy.''
 \label{sec:tools}
 \input{existing_tools.tex}
 
-\section{Conclusions}
+\section{Recommendations}
 \label{sec:conc}
+
+% TO DO: John, Simon, Lauren, Gregory, Yusra: please review and edit
+The recommendations are based on an assessment of the requested features, supporting use cases, and existing toolsets evaluated.
+One currently unsupported feature is large image display.
+Users across DM and commissioning (section \ref{sec:features:focal_plane}) will need to see a full-focal plane or full-tract image in its entirety and be able to zoom in to the individual pixels.
+Of the existing tools evaluated, the LSST Camera Image Viewer was the most impressive in terms of responsiveness in the zooming.
+The Camera Team reports that Tony Johnson is actively developing the viewer to include additional features.
+Therefore adopting this will prevent duplication of effort.
+
+However, the Camera Team reports that the viewer owes its responsiveness to a set of dedicated hardware.
+Therefore, we recommend that DM
+\begin{recommendation}{camera_viewer}{Provide a capability for fast display of full-focal-plane images for all data ingested at the LSST Data Facility based on the LSST Camera Image Viewer}
+\end{recommendation}
+
+Users across project are most proficient with DS9. Therefore, we recommend that DM
+
+\begin{recommendation}{ds9}{Make ds9 available through commissioning and early operations by either:
+\begin{itemize}
+\item{Maintaining a development server (lsst-dev equivalent) for project staff,}
+\item{Connecting LSP to local ds9 via SAMP or XPA or}
+\item{Through WebDAV}
+\end{itemize}}
+The feasibility of these options should be evaluated
+\end{recommendation}
+
+Both JS9 and AstroWidgets show promise for the Jupyterlab environment.
+JS9 is snappy, has the same interface as DS9, mouse gesture stretch, and on the fly smoothing.
+Ginga/AstroWidgets is snappy, extensible by python programmers, and it is easy to run arbitrary python code on selected pixels.
+Therefore we recommend that DM
+\begin{recommendation}{js9_ginga}{Support at least one of JS9 / AstroWidgets + Ginga on Science Platform}
+A bake-off is required to determine which to support
+\end{recommendation}
+
+
+Finally, firefly farther ahead feature-wise.
+Firefly has a few unique features.
+These include its intuitive mask plane toggle and that users can open in a window on another monitor (or across the country).
+Therefore we recommend that DM
+\begin{recommendation}{firefly}{Continue to provide support for the Firefly tool, including some level of resourcing for servicing emergent feature requests}
+\end{recommendation}
+
 
 \appendix
 

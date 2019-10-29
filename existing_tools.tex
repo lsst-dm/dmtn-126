@@ -1,12 +1,143 @@
+% Can I imagine writing an \texttt{afwDisplay} for this tool? Do they fulfill any use cases
+
 \subsection{Firefly}
+% TO DO: Gregory Edits
 
-\subsection{Ginga}
+Firefly has been the default fits viewer for the notebook environment. 
 
-\subsection{``Tony Johnsons's Viewer''}
+It has more features than any other tool evaluated. 
+
+It already has a robust \texttt{lsst.afw.display} and is used in pipelines tutorials. 
+
+It's easy to imagine adding a wide variety of new features to Firefly at relatively modest cost, especially, ones that mainly involve writing more `afw`-oriented Python interfaces to existing features.
+The sticking point is that there are some performance-related issues that are inherent to the client-server architecture, and that would require significant engineering to address (e.g., by moving more of the data and computation to the client, or by doing more cacheing of likely-to-be-requested data).
+That engineering is not inconceivably difficult  but it may be a disproportionate amount of work compared to the perceived near-term benefit. 
+
+In some cases this is behind the difficulty in addressing what may at first sight appear to be simple UI issues.
+However, implementing some UI features would not yield a good user experience, because the system is not designed to handle the high rates of actions that would produce.
+One feature for example, connecting the mouse scroll wheel UI events to the zoom-in and zoom-out actions, would be trivial to implement but would yield a slower experience. 
+
+Developers had been gradually making changes to improve the responsiveness of the UI by moving work from the server to the client - for instance, rotations are now done client-side and are really fast.
+However, these big system changes are not driven strongly by Firefly's other IPAC-side applications, and continuing this work that is probably not realistically doable within the post-descope constraints.
+
+\subsection{Ginga (+Astrowidgets)}
+
+Ginga and Astrowidgets both attempt to supply toolkits for image display, instead of a full-featured program like DS9.  The standalone ginga program is referred to in the documentation as a ``reference viewer,'' which displays an example interface that can be built.  The API does not have communication abilities outside the scope of the program, so there is no DS9/XPA like interface to either the reference viewer or to any notebook based viewer.  The stack includes `lsst.afw.display.ginga`, which in a notebook environment can communicate with the viewer in that environment, but the lack of inter-process communication prevents `lsst.afw.display.ginga` from functioning as a debug display for command-line tasks.
+
+The Ginga viewer supports directly loading FITS files as well as arbitrary numpy arrays of data.  The keyboard and mouse handling is enabled when the viewer is constructed in a notebook, and is connected to simple image operations: zooming, panning, image scaling, contrast, colormaps, axes flips, and rotation.  There are python API callbacks to all of these, with ``get'' and ``set'' methods.  Astropy regions are supported, and likewise have ``add'' and ``delete'' methods to the internal catalog.  Headers and WCS objects are supported, with `lsst.afw.display.ginga` having a WCS translator to map between the LSST and ginga interfaces.  Mask overlays are supported, although not with a simple API.
+
+Astrowidgets is an additional layer of helper code on top of the Ginga viewer, supplying a friendlier interface to the viewer while also connecting more explicitly to the ipywidgets widgets.  This interface can be used to construct a DS9-like experience with buttons, sliders, and text boxes to control the viewer.  The tutorial example adds a X/Y/RA/DEC/image value box to track mouse positions in real time.  Astrowidgets is in early development, so there is not much beyond the wrappers for the Ginga built in code.  However, it is easy to work with, as demonstrated by adding a method to load an `lsst.afw.exposure` object its respective WCS and mask planes.  Multiple frames are not cleanly supported with either interface, but the astrowidgets methods can connect an array of images to the viewer via widgets that provide information about the current image being displayed.
 
 \subsection{JS9}
+% TO DO: Simon Edits
 
-\subsection{HscMap}
+JS9 (\url{https://js9.si.edu/} is being actively developed by Eric Mandel as a browser-based FITs viewer that reimplements the DS9 interface.
+
+Evaluation:
+It is hard to do mask overlays, due to fundamental differences between how DS9 and JS9 handle multiple images in the same app.
+It is not clear what the multi-client environment is like. Is it more like  one monolithic server with many clients, or each client spawning its own server?
+There may be constraints on this because the browser and the python interpreter would need to have access to the same environment.
+As far as we understand at the moment, matching the sort of mask overlay that we currently have in Firefly/DS9 isn't possible.
+But that may just be a matter of not fully understanding JS9's capabilities.
+
+The \texttt{pyjs9} client library wraps a RESTful API exposed by the server.
+
+
+\subsection{LSST Camera Image Viewer}
+\label{sec:existing_tools:camera}
+
+The LSST Camera Team has developed a bespoke image viewing tool to support their activities.
+As such, it is primarily aimed at examining raw pixel data recorded from the camera to diagnose hardware issues.
+This viewer is being developed by Tony Johnson (SLAC); much of the material below is adapted from his comments.
+Given the rapid pace of ongoing development, some of the discussion below may soon (or already) be outdated.
+
+The current version of the Camera Image Viewer is available on the web at \url{https://lsst-camera-dev.slac.stanford.edu/FITSInfo/}.
+
+\subsubsection{Capabilities}
+
+Given its audience and goals, it does not provide facilities which are require for astronomical analysis of the data.
+For example, the viewer has no concept of world coordinate system: it simply operates in focal plane pixel coordinates.
+
+Instead, the viewer is designed to provide high-performance interactive display of images corresponding to a full focal plane or subsections thereof.
+The development plan prioritizes:
+
+\begin{itemize}
+
+  \item{A web-based interface for selecting and accessing data;}
+  \item{Scaling from full focal-plane to individual amplifiers, with real-time panning and zooming;}
+  \item{The ability to select, display and analyze regions by hardware device (e.g. particular CCDs, amplifiers, etc.);}
+  \item{The ability to perform hardware diagnostic functions on the selected image region;}
+  \item{The ability to trigger DM algorithms to run on the selected region;}
+  \item{The ability to track and overlay the values of diagnostic measurements with time.}
+
+\end{itemize}
+
+At time of writing, not all of this functionality is currently available.
+
+\subsubsection{Implementation details}
+
+The tool consists of two separate pieces (the ``browser'' and the ``viewer'').
+The former is a relatively simple web front end to the Camera image database which enables the user to select data of interest.
+The latter is more technically interesting, as it must cope with the technical challenge of making available extremely large quantities of image data to the user in a fast, interactive way.
+
+The viewer is based on the International Image Interoperability Framework\footnote{\url{https://iiif.io}} (IIIF), which defines a standardized API for making image data available on the web at scale.
+A primary advantage of this is that existing open-source software is used as the basis of the system.
+In particular, the Camera Image Viewer is based on:
+
+\begin{itemize}
+
+  \item{Cantaloupe\footnote{\url{https://cantaloupe-project.github.io}}, a server-side system for reading image data from storage and providing it to clients using IIIF standards;}
+  \item{OpenSeadragon\footnote{\url{https://openseadragon.github.io}}, a browser-based Javascript library for receiving and displaying image data.}
+
+\end{itemize}
+
+Both of these tools provide for extensive customizability.
+In particular, Cantaloupe has been extended to read data from the FITS files delivered by the camera, while OpenSeadragon is being extended to provide the various user-facing interaction and analysis facilities which are required.
+
+It is worth noting that, although data is stored on the server in FITS format, it is converted to JPEG for transmission to the client.
+It is therefore lossily compressed: the original pixel values are not directly available in the image stream.
+
+Also note that --- regardless of the software system used --- loading and displaying full-focal-plane data at a low enough latency to provide a satisfactory interactive experience places a substantial load on the back-end storage system.
+This will, of course, scale with the number of clients accessing the system, but one should expect to make a significant investment in hardware underlying the image viewer.
+
+\subsubsection{Application to DM use cases}
+
+The Camera Image Viewer provides an impressively high-performance interactive visualization of the full focal plane in a way that is not easily available through other tooling.
+As such, it is of obvious value to the DM Subsystem.
+
+However, the are a number of important limitations:
+
+\begin{itemize}
+
+  \item{The viewer does not have any concept of astronomical coordinate systems or of reprojecting data onto the celestial sphere;}
+  \item{The level of analytic functionality currently available is limited, although more is in development;}
+  \item{Integration with DM standard display interfaces (\texttt{afw.display}, etc) seems challenging;}
+  \item{The current system is tightly coupled to the raw FITS images being produced by the camera: it would require substantial work to access processed data from a Butler repository.}
+
+\end{itemize}
+
+Deploying the system as it now stands at the Data Facility would require some investment in both hardware, to provide the low-latency data access required, and in development, to make it possible to retrieve and display data from Butler repositories rather than just camera raw FITS files.
+However, making this investment would provide DM with a critical capability that is not easily available from elsewhere.
+
+
+
+\subsection{hscMap}
+\label{sec:existing_tools:hscMap}
+
+hscMap is an image viewer developed at the National Astronomical Observatory of Japan (NAOJ) with a focus on facilitating the exploration of images from the Hyper Suprime-Cam Subaru Strategic Survey (HSC-SSP).
+The survey aims at a total areal coverage of $\approx$1400 deg$^2$ of multiband (grizy + 4 narrow-bands) imaging to three depth levels in fields spanning a large fraction of the sky visible from Mauna Kea.
+As such, a primary motivating factor was the ability to easily and responsively zoom around and into large areas of the full sky down to the near-pixel level.
+A quick tour of the latest release (\url{https://hscmap.mtk.nao.ac.jp/hscMap4/app}) which is currently serving the $\approx$300 deg$^2$ imaging data from the second public data release (PDR2; \url{https://hsc-release.mtk.nao.ac.jp/doc/index.php/survey-2/}) confirms that this goal has been achieved.
+Another salient feature that immediately stands out is the ability to combine and view 3-bands in ``true SDSS color'' \citep{2004PASP..116..133L} with adjustable scaling (in addition to the basic RGB coloring).
+A current limitation is a lack of detailed (and searchable) documentation providing a deeper understanding of the mechanics and underlying data structures required.
+We reached out to the developers for feedback and were directed to what essentially amounts to video (YouTube) demos of selected functionality including: general navigation, overlays including survey specific field names and grids (tracts and patches) as well as common celestial objects, catalog (pre-made in cvs format and containing at least RA and Dec columns) overlays and basic plotting and sub-selecting via a ``rope tool'' on a scatter plot and SQL-style queries of a database, an image cut-out service, uploading local FITS files and cvs catalogs by simple drag and drop, display of HiPS-based tiling data served by the Strasbourg astronomical Data Center, etc., (see \url{http://hscmap.mtk.nao.ac.jp/hscMap4/app/help.html}).
+There is also support for integrating hscMap into JupyterLab notebooks (see \url{http://hscmap.mtk.nao.ac.jp/hscMap4/jupyterlab-hscmap/docs})
+
+Despite all these impressive features, we are not currently recommending further investigations into how hscMap could be used as a mainline image viewer for LSST due to a number of (un)known and complicating factors.
+These include the need for post processing of the image and catalog data to be served up by a database; the details and resources required are not known to us at this time.
+Additionally, it is not clear what the plans are for long-term development of and support for hscMap, potentially limiting the possibility for feature requests.
+However, the ability to simply and snappily visualize the whole LSST sky is reason enough to at least keep hscMap in mind when pursuing other toolkits (as recommended in this report).
+
 
 \subsection{Aladinlite}
 
@@ -29,3 +160,51 @@ image data to the scientific community, it is unlikely to be helpful during the
 process of commissioning the LSST hardware and software.
 
 \subsection{Miscellaneous}
+\subsubsection{ExpViewer}
+\label{sec:existing_tools:misc:expviewer}
+
+ExpViewer is being developed by a team led by Luiz da Costa in Brazil to provide rapid display of image data received from the camera in the operational era.
+A preview version is currently available online at \url{http://expviewer.linea.gov.br}.
+
+ExpViewer is built upon the same International Image Interoperability Framework as the Camera Image viewer (\S\ref{sec:existing_tools:camera}), and also makes use of OpenSeadragon for in-browser display.
+However, rather than directly reading data from FITS stored on disk, images are converted to TIFF format when they are ingested by the tool.
+
+ExpViewer and the Camera Image Viewer have a lot in common, but, at time of writing, the Camera Image Viewer provides a wider range of functionality, while ExpViewer provides a simpler and (arguably) more attractive user interface.
+The WG understands that discussions are ongoing between the ExpViewer and Camera Image Viewer teams to identify commonalities, avoid duplication, and increase collaboration, but outcomes of this are currently unclear.
+
+Given its ability to work with FITS data (albeit in the camera raw specific form) and its rapid pace of development, the WG suggests that the Camera Image Viewer provides a more attractive tool for potential adoption by DM.
+
+\subsubsection{WorldWideTelescope}
+
+The American Astronomical Society has adopted Microsoft's World Wide Telescope (WWT)
+It is under active development by Peter Williams et al. at the cfa
+
+It uses a tiling scheme named TOAST.
+There is a tool named toasty, to convert images to the TOAST tiling scheme. 
+
+At Python in Astronomy 2019,  Peter Williams displayed a full tract HSC coadd.
+It took about 15 minutes to process a tract, but could likely be made faster with effort.
+WWT has potential to addresses the whole sky visualization and survey footprint visualization use case. 
+
+A proposal has been submitting to the NSF for funding to better support visualizing full-focal-plane images and full-sky data from telescopes like the LSST.
+
+\subsubsection{des-exp-checker}
+
+This tool is not an image display tool, and outside the scope of this review.
+However, it was referenced in a use case.
+The DES developed a very simple web interface backed with a sqlite database and fits images on a file system.
+It was used to visually inspect images during comissioning to find systematic problems e.g. surfaces that needed black paint.
+
+We reviewed the DESC instance of it used to review data from the  DC2 r2.1i imsim run.
+Users can label image data with problems (e.g. tree rings) that apply at particular positions.
+These are then stored to a SQLite database.
+The masks shown are the actually LSST mask, rendered as opaque color on top of the images, though it was not clear exactly which mask planes are used.
+It is clearly a special-purpose tool, though is imple enough that it is appealing to use for appropriate tasks.
+
+We could envision using it as a tool by DM to inspect images for evaluating Science Pipelines algorithms.
+For example, we could use it to develop a training set for classifying real vs. bogus sources in difference images.
+It would be too much overhead to setup for a single user, but could be used for crowd-sourcing visual inspection of data.
+This addresses one particular set of use cases, but that set of use cases is highlighted as important in the inputs we've collected.
+One might deploy it on e.g. LDF Kubernetes Commons.
+
+% TO DO: format feature vs. tool table (Yusra)}
