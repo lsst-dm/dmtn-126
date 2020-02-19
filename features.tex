@@ -140,24 +140,24 @@ User experience:
 There is a big difference between a visualization platform being able to do something and having it be easy or responsive enough to not cause an extra barrier to usage.  A few specific examples of functionality that needs to be gotten right or the tool will suffer from users finding ways to use other tools:
 \begin{itemize}
 
-\item{\bf{Trivial adjustment of range and zero point of image scaling}:
+\item \textbf{Trivial adjustment of range and zero point of image scaling}:
 It should be a one click (or hotkey) operation to get a good guess at the scaling range (e.g. z-scale).
 Dynamic scaling needs to be achieved through intuitive gestures.
-Example: When looking at raw frames, the bias has not yet been taken out.  This means each amp needs a different scaling.  When switching between amps, it must be trivial to adjust the scale parameters via the mouse so that a reasonable set of scale parameters can easily be found (the implementation in ds9 is a well known reference for this).}
-\item{\bf{Pan and zoom must be desktop-like}:
+Example: When looking at raw frames, the bias has not yet been taken out.  This means each amp needs a different scaling.  When switching between amps, it must be trivial to adjust the scale parameters via the mouse so that a reasonable set of scale parameters can easily be found (the implementation in ds9 is a well known reference for this).
+\item \textbf{Pan and zoom must be desktop-like:
 Even a small delay between a drag and the frame panning causes momentary disorientation.
 Similarly, if the zoom is not close to continuous and instantaneous, the user must reorient after every change in zoom.
-Example: It is common to be at a fairly high zoom level and want to pan around to find a specific type of object or feature.  If the pan takes any fraction of a second, the user needs to figure out where they are so they know where to pan again.  Similarly, one may want to zoom out to find other examples.  If the zoom isn't smooth, it requires cognitive effort to figure out a) when the right zoom has been reached and b) where to pan after the zoom.}
-\item{\bf{Mouse over values need to update with ultra-low latency}:
+Example: It is common to be at a fairly high zoom level and want to pan around to find a specific type of object or feature.  If the pan takes any fraction of a second, the user needs to figure out where they are so they know where to pan again.  Similarly, one may want to zoom out to find other examples.  If the zoom isn't smooth, it requires cognitive effort to figure out a) when the right zoom has been reached and b) where to pan after the zoom.
+\item \textbf{Mouse over values need to update with ultra-low latency}:
 The value of the pixel under the mouse needs to be displayed prominently.
 The value must update with ultra-low latency as the mouse is moved over the image.
 Example 1: It is common to want to explore pixel values to get an average by eye of the background.  Just by running the mouse over pixels between objects, it is simple to get a sense of the background value if the mouse over value updates essentially continuously.
-Example 2: It is common to want to try to find the ~max pixel value in an object.  Rather than drawing a trace, it is often sufficient to run the mouse over the pixels of the object to look for a gradient and follow it up.  This is much harder to do if it takes significant time to update the mouse over value.}
-\item{\bf{It needs to be simple to match multiple images on either image coordinates or WCS coordinates}:
+Example 2: It is common to want to try to find the ~max pixel value in an object.  Rather than drawing a trace, it is often sufficient to run the mouse over the pixels of the object to look for a gradient and follow it up.  This is much harder to do if it takes significant time to update the mouse over value.
+\item \textbf{It needs to be simple to match multiple images on either image coordinates or WCS coordinates}:
 Given a reference image, snap all other images in other frames to the same image or sky (configurable) coordinates and zoom level with less than three mouse clicks.
 Once co-registered, pan and zoom should be linked in all panes.
 This includes the ability to cycle through the frames in the same pane, i.e. "blinking" through the frames sequentially via a blink selection in a menu option or hotkey.  I.e. not sequentially clicking through a series of tabs or list entries.
-Example: There are lots of moving objects in images of any depth.  To find them load three epochs of the same area separated by a few days.  Register all images to the first image's sky coordinates.  Stack the images and in one pane cycle through them automatically with a delay of 0.5 seconds.  Look for points sources that follow a linear trajectory relative to the surrounding stationary point sources.}
+Example: There are lots of moving objects in images of any depth.  To find them load three epochs of the same area separated by a few days.  Register all images to the first image's sky coordinates.  Stack the images and in one pane cycle through them automatically with a delay of 0.5 seconds.  Look for points sources that follow a linear trajectory relative to the surrounding stationary point sources.
 \end{itemize}
 
 \subsection{DS9-style ``smoothing'' (on the fly convolutions)}
