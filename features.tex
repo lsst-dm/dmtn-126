@@ -144,7 +144,7 @@ There is a big difference between a visualization platform being able to do some
 It should be a one click (or hotkey) operation to get a good guess at the scaling range (e.g. z-scale).
 Dynamic scaling needs to be achieved through intuitive gestures.
 Example: When looking at raw frames, the bias has not yet been taken out.  This means each amp needs a different scaling.  When switching between amps, it must be trivial to adjust the scale parameters via the mouse so that a reasonable set of scale parameters can easily be found (the implementation in ds9 is a well known reference for this).
-\item \textbf{Pan and zoom must be desktop-like:
+\item \textbf{Pan and zoom must be desktop-like}:
 Even a small delay between a drag and the frame panning causes momentary disorientation.
 Similarly, if the zoom is not close to continuous and instantaneous, the user must reorient after every change in zoom.
 Example: It is common to be at a fairly high zoom level and want to pan around to find a specific type of object or feature.  If the pan takes any fraction of a second, the user needs to figure out where they are so they know where to pan again.  Similarly, one may want to zoom out to find other examples.  If the zoom isn't smooth, it requires cognitive effort to figure out a) when the right zoom has been reached and b) where to pan after the zoom.
@@ -156,7 +156,7 @@ Example 2: It is common to want to try to find the ~max pixel value in an object
 \item \textbf{It needs to be simple to match multiple images on either image coordinates or WCS coordinates}:
 Given a reference image, snap all other images in other frames to the same image or sky (configurable) coordinates and zoom level with less than three mouse clicks.
 Once co-registered, pan and zoom should be linked in all panes.
-This includes the ability to cycle through the frames in the same pane, i.e. "blinking" through the frames sequentially via a blink selection in a menu option or hotkey.  I.e. not sequentially clicking through a series of tabs or list entries.
+This includes the ability to cycle through the frames in the same pane, i.e. ``blinking'' through the frames sequentially via a blink selection in a menu option or hotkey.  I.e. not sequentially clicking through a series of tabs or list entries.
 Example: There are lots of moving objects in images of any depth.  To find them load three epochs of the same area separated by a few days.  Register all images to the first image's sky coordinates.  Stack the images and in one pane cycle through them automatically with a delay of 0.5 seconds.  Look for points sources that follow a linear trajectory relative to the surrounding stationary point sources.
 \end{itemize}
 
