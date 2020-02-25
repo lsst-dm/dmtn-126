@@ -34,13 +34,18 @@ Astrowidgets is an additional layer of helper code on top of the Ginga viewer, s
 JS9 (\url{https://js9.si.edu/} is being actively developed by Eric Mandel as a browser-based FITs viewer that reimplements the DS9 interface.
 
 Evaluation:
-It is hard to do mask overlays, due to fundamental differences between how DS9 and JS9 handle multiple images in the same app.
-It is not clear what the multi-client environment is like. Is it more like  one monolithic server with many clients, or each client spawning its own server?
-There may be constraints on this because the browser and the python interpreter would need to have access to the same environment.
-As far as we understand at the moment, matching the sort of mask overlay that we currently have in Firefly/DS9 isn't possible.
-But that may just be a matter of not fully understanding JS9's capabilities.
+On initial evaluation, it was hard to tell how to do mask overlays in a manner similar to what we do with DS9.
+In the interim, Eric has implemented two examples for how to do this and both look viable.
+See the demo with an HSC image at \url{https://js9.si.edu/js9/js9mask.html}.
+JS9 can run in either a monolithic server mode with many users accessing the same endpoint or in a more local manner with each user running their own server.
+Eric has provided a Docker container that can be used to spin up a server locally: https://hub.docker.com/r/ericmandel/js9server
+Since docker plays nicely with k8s, it may be a trivial extension to the existing nublado helm charts to also run a js9 pod.
+There will be performance tradeoffs in terms of data transmission depending on how we use the tool.
+Using the Python interface should be fast to upload images since the server and prompt are in the same cluster, but shipping FITS files to the user local browser will pay the penalty of uploading the image to the browser.
+However, that doesn't seem to be any different than shipping an image to any other local tool.
 
 The \texttt{pyjs9} client library wraps a RESTful API exposed by the server.
+The client library at first glance seems to have the necessary functionality to implement most of the standard \texttt{lsst.afw.display} back end.
 
 
 \subsection{LSST Camera Image Viewer}
