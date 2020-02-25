@@ -165,15 +165,10 @@ Therefore, we recommend that DM
 \begin{recommendation}{camera_viewer}{Provide a capability for fast display of full-focal-plane images for all data ingested at the LSST Data Facility based on the LSST Camera Image Viewer}
 \end{recommendation}
 
-Users across project are most proficient with DS9. Therefore, we recommend that DM
+Users across project are most proficient with DS9 and are dependent on using a development server. A development server offers the best of both worlds: flexibility of tools and access to large datasets.  Therefore, we recommend that DM
 
-\begin{recommendation}{ds9}{Make ds9 available through commissioning and early operations by either:
-\begin{itemize}
-\item{Maintaining a development server (lsst-dev equivalent) for project staff,}
-\item{Connecting LSP to local ds9 via SAMP or XPA or}
-\item{Through WebDAV}
-\end{itemize}}
-The feasibility of these options should be evaluated
+\begin{recommendation}{ds9}{Make ds9 available through commissioning and early operations by maintaining a development server (lsst-dev equivalent) for project staff}
+{If this becomes unfeasible, we should evaluate how to ds9 available by connecting LSP to local ds9 via SAMP or XPA or through transferring data locally through WebDAV.}
 \end{recommendation}
 
 Both JS9 and AstroWidgets show promise for the Jupyterlab environment.
