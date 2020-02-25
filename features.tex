@@ -4,6 +4,12 @@
 % Can you do it already on lsst-dev? If yes, how? If not, how much work would it be to make it possible?
 %Can you do it already on LSP? If yes, how? If not, how much work would it be to make it possible?
 
+The following features were requested by DM, Camera, or Comissioning Team.
+Features are some action users want to be able to complete or some characteristic of the image viewer.
+Use cases are the commissioning,  science validation, pipelines-writing tasks that prompt these actions.
+Some of these features are currently possible and easy on lsst-dev and Nublado; some are not.
+We distinguish between ``possible'' and ``easy.''
+
 \subsection{All-Sky Visualization}
 
 High on the priority list for surveys (such as LSST) with a large footprint on the sky is a tool enabling a visualization of the (to-be) observed area on the full sky covered over some time period (e.g. per night, survey-to-date). For example, one might like to overlay the instrument footprint of all the single-epoch images accumulated to-date or in a given time period and be able to visualize their on-sky RA/Dec positions with respect to common celestial objects/reference points (e.g. the Milky Way galaxy, the Solar System and its members, constellations, Messier objects, other surveys, etc.)
@@ -45,15 +51,14 @@ For example, the Hierarchical Progressive Survey (HiPS) standard \citep{2017ivoa
 This makes it impossible to recover individual LSST pixels from the resampled data.
 
 \subsection{Mark and save positions on images}
-% TO DO Yusra
 
-Define regions of interest.
+Science Pipelines, Camera, and Commissioning teams requested the ability to define regions of interest by marking and saving positions on images.
 
-Use Case: Crowd Sourced Image Inspection
-Inspect and markup images during commissioning in order to find surfaces that need black paint (analogous to the des-exp-checker).
+This is particularly useful for visually inspecting many images at once.
+One story we heard over and over was the crowd-sourced image review of DES images during DECam commissioning (des-exp-checker).
+Team members inspected and marked artifacts in images, which allowed them to find patterns and surfaces that need black paint.
 
-A user story told we heard many times was of image review of DES images during comissioning.
-
+Science pipelines users want to save positions or regions on images to later match to a catalog or quickly create a training catalog.
 
 \subsection{Individual Image Inspection}
 \label{sec:ds9}
@@ -68,29 +73,26 @@ level data and that it be able to operate in a server-client mode so that users
 do not have to download terabytes of image data onto their local machines.
 
 \subsection{Compare Images}
-% TO DO Yusra
 
-All groups polled requested the ability to directly compare two images, by locking WCS or pixel coordinates, scale and limits, and both blinking and side by side.
+All groups polled requested the ability to directly compare two images, by locking WCS or pixel coordinates, scale and limits.
 After locking users want to be able to pan and zoom while viewing side-by-side or blinking.
 
 Two groups also requested a ``crossfade'' option as ``nice to have'' rather than essential.
 Crossfade means that two images are overlaid at the same time, and the user moves a slider to shift the relative weighting of each image.
-Ideas's put forth include also include using a movable "curtain" UI element to wipe one image across the other.
-Most, if not all, uses cases are fulfilled by a simple blink.
+Ideas put forth include using a movable "curtain" UI element to wipe one image across the other.
+However, most, if not all, uses cases are fulfilled by simple blinking
 %Whenever photo editing apps that let you compare the before and after of a photographs with a movable curtain, and I always wish they just let me blink.
 
-Using DS9 on \texttt{lsst-dev} this is possible and easy (for frequent users of DS9).
-Using Firefly or matplotlib on Nublado, it may be possible, but it is not easy.
-
-User stories
+User stories:
 \begin{itemize}
 \item{As a pipelines developer,  I want to be able to blink two locked images so that I can assess the effect of an algorithm modification.}
 \end{itemize}
 
+Using DS9 on \texttt{lsst-dev} this is possible and easy (for frequent users of DS9).
+Using Firefly or matplotlib on Nublado, it may be possible, but it is not easy.
 
 \subsection{Overlay Maps/Masks}
 \label{sec:features:masks}
-%TO DO: Gregory Edits
 
 Commissioning, AP, and SST specifically requested the ability to layer maps on
 images with varying degrees of transparency and multiple colors.
@@ -104,10 +106,10 @@ functionality.
 
 Science Pipelines users will view masks in order to inspect full focal plane defect overlays.
 They are already users of Firefly's capability to toggle individual mask planes and choose colors.
-Science Pipelines users want NaNs made obvious in another color, in order to make image processing problems obvious sooner rather than later. 
+Science Pipelines users want NaNs made obvious in another color, in order to make image processing problems obvious sooner rather than later.
 
 %"Individual" apparently meaning that one or more mask planes to be displayed could be selected programmatically or by UI, with flexible assignment of colors and transparency.
-The comissioning team also requested colorized \emph{image} overlays on greyscale images (with tunable alpha)/
+The commissioning team also requested colorized \emph{image} overlays on greyscale images (with tunable alpha)/
 This refers to the rendering of single-channel image data with a hue or a partially transparent color overlay based on an additional channel (e.g., colorizing a single-channel flux image by the per-pixel variance).
 
 
@@ -115,7 +117,6 @@ This refers to the rendering of single-channel image data with a hue or a partia
 
 
 \subsection{Callbacks (Run arbitrary code on a pixel or region)}
-% TO DO:  I'm not sure who is the best person to write this: Gregory John Simon}
 
 Users requested the ability to run arbitrary python code on a pixel or selected region.
 
@@ -127,15 +128,14 @@ The comissioning team stated that  ``It would be very nice to be able to click o
 
 
 \subsubsection{Extensible displays}
-% Move elsewhere?
-% TO DO: Simon? John?
+
 Everything must be scriptable.
-Science Pipelines puts a high priority on having APIs for all functionality. 
+Science Pipelines puts a high priority on having APIs for all functionality.
 
 Because the set of interesting specific visualizations far exceeds what could be provided centrally, make it possible for users to define visualizations, constructed from the lower-level visualization capabilities in the system (or an external library), in a way that makes them straightforward to apply on demand.
 
 \subsection{Snappy User experience}
-% TO DO Simon Edits
+
 User experience:
 There is a big difference between a visualization platform being able to do something and having it be easy or responsive enough to not cause an extra barrier to usage.  A few specific examples of functionality that needs to be gotten right or the tool will suffer from users finding ways to use other tools:
 \begin{itemize}
@@ -161,10 +161,10 @@ Example: There are lots of moving objects in images of any depth.  To find them 
 \end{itemize}
 
 \subsection{DS9-style ``smoothing'' (on the fly convolutions)}
-%TO DO: Edits
+
 Both the Camera Team and Science Pipelines Team are heavy users of DS9's ``smoothing'' function.
 
-Science Pipelines users smooth images in order to see the sky backgrounds which are usually drowned out by the noise in the original images. 
+Science Pipelines users smooth images in order to see the sky backgrounds which are usually drowned out by the noise in the original images.
 
 
 \subsection{Mouseover Effects}
@@ -177,12 +177,14 @@ The ability to have a (selectable) set of values and properties displayed on mou
 \end{itemize}
 
 \subsection{Dynamic stretch}
-% TO DO: Simon Edits
 
-Camera team visualizes raw images (still with overscan regions or amp-to-amp offset).
 Interactive (and responsive) modification of color stretch parameters.
 
-User story:  As a camera team developer,  I want to be able to change the scale limits of two side-by-side images by hand, so that I can see the overscan.
+When visualizing images with offsets, dynamic stretch is necessary to see detail in offset regions.
+
+Camera team visualizes raw images (still with overscan regions or amp-to-amp offset).
+
+User story: As a camera team developer,  I want to be able to change the scale limits of two side-by-side images by hand, so that I can see the overscan.
 
 %Use "Standard" image interactions in a responsive way: scale, stretch, zoom, pan, colormap and basic computation and image analysis capabilities.
 %There was a general desire for stretch/scale changes to be "fast".
@@ -190,7 +192,7 @@ User story:  As a camera team developer,  I want to be able to change the scale 
 
 
 \subsection{Display footprints and heavy footprints}
-% TO DO: Gregory Edits
+
 Display of LSST data objects with natural on-image interpretations: (Heavy)Footprints, PSF models at a point, PSF variation models or measurements
 Footprints should be clickable to facilitate investigation into deblending computations.
 
@@ -202,12 +204,17 @@ Could be useful for large galaxies, bright stars, evaluating deblending
 CFC: Could be useful for stray and scattered light analysis if the source model include ghost images from internal refections of bright sources.
 
 \subsection{Overplot circles/ellipses/footprints}
-% TO DO: Gregory Edits
-Suggested pixel-level image visualization requirements
-Ability to overlay sources, along with their model ellipses; must be able to use multiple projections, e.g., instrument, sky; must be able to pan and zoom and adjust color scale quickly; must be able to overlay masks; must be able to see map value and coordinates at mouse location; a "magnifying glass" / zoom-in inset similar to ds9 would be nice to have
-CFC: This should be merged with use case 7. (LPG +1)
-Overlay sources from other surveys   (current: hscMap for HSC, ????  for LSST)
-Overlay source catalog with brushing and linking   (current: Firefly. Though not everyone knows how to use this.)
+
+Suggested pixel-level image visualization requirements include the ability to
+\begin{itemize}
+\item{overlay sources, along with their model ellipse}
+\item{use multiple projections, e.g., instrument, sky}
+\item{pan and zoom and adjust color scale quickly}
+\item{overlay masks}
+\item{see map value and coordinates at mouse location}
+\item{overlay sources from other surveys (current: hscMap for HSC)}
+\item{overlay sources with brushing and linking (current: Firefly. Though not everyone knows how to use this.)}
+\end{itemize}
 
 \subsection{Miscellaneous}
 \begin{itemize}
@@ -220,14 +227,14 @@ Overlay source catalog with brushing and linking   (current: Firefly. Though not
 These are catalog visualization requests that augment image display, but aren't specific to displaying images in a technical sense.
 
 \subsubsection{Brushing and linking}
-% TO DO: Gregory Edits
+
 Across images, histograms, and scatterplots (on the board these pairs of those were called out: image-hist, image-scatter, hist-scatter, but hist-hist, scatter-scatter, and so on also make sense). Support pairwise scatterplots (e.g., displays of the matrix of all x-y plots derivable from a set of N variables).
 KB: Bokeh / holoviews / datashader offers much of this capability, for example
 CFC: PyVis tools does this.
 KB: Brushing and linking between matplotlib plots and python objects in a notebook is definitely important. In addition, it would be really useful to be able to examine an image (e.g., in Firefly), overlay catalog objects, select objects of interest, and then be able to access that selection from a notebook. In other words, I am asking for a linkage between pixel-level images, object catalogs, and the notebook aspect.
 
 \subsubsection{Catalog Integration}
-% TO DO: Edits
+
 An obvious desire for a viewer associated with images with which any type of object catalog can be associated (e.g. catalogs specifically created for the image through image processing pipelines, external reference catalogs, etc.) would be the ability to overlay the catalogs on the image itself.  There should be a two-way ability to click on a source in an image or catalog and get associated catalog-level data or zoom to associated position on the image, respectively.  Hovering the mouse on a source should pop up useful metadata about that source.
 
 Sub-selections of data points should be possible via mouse-clicking tools (e.g. single and shift clicking, rectangular and other geometric shapes, ``roping'') or an SQL-like querry to the database serving the catalog.  There should be numerous operations that can be executed on any seleciton of data points:
@@ -241,7 +248,7 @@ Sub-selections of data points should be possible via mouse-clicking tools (e.g. 
 
 
 \subsubsection{Per-Source/Position Flipbooks}
-% TO DO: Edits
+
 In most cases when viewing and assessing a given image, there also exists myriad image/template types corresponding to the image of interest (and each other) in a spatial sense.  An obvious example would be the set of individual input images contributing to a given coadd image.  The ability to produce and display on-the-fly various flavors of a ``flipbook'' consisting of cutouts centered on a given source or RA/Dec from all the images related in some way to the source/position of inerest would be a great asset.  Such a flipbook would be particularly useful in the context of time-variable phenomena such as supernova (lightcurves), moving objects (trajectories), and image quality variations (e.g. seeing variability, cosmic-ray and other unmasked/interpolated cosmetic defects, high levels of extinction, etc.)  Per-source flipbooks are understood to be temporal in nature.  An automated (but also set-able) definition of cutout dimensions could be based on source properties (e.g. based on size or detection footprint, possibly of the parent for blended sources).
 
 One could also imagine the creation of flipbooks for various categories of flux images (raw, post-ISR, calibrated, etc.) to visualize the effects of the various calibration phases.  Flipbooks of source models computed for each epoch would also be informative.  In the aid of model fitting characterization and difference imaging diagnoses in particular, flipbooks of image and model residuals (individual and/or coadd image minus templates, image-to-model residuals, where the model could be per-epoch or time-integrated) would be an invaluable quality assessment tool.
