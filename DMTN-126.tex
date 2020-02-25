@@ -7,7 +7,7 @@
 
 % To add a short-form title:
 % \title[Short title]{Title}
-\title{Image Display WG}
+\title{Image Display Working Group Report}
 
 \author{%
 Yusra AlSayyad (chair),
@@ -93,6 +93,12 @@ However, due to uncertainty around project scope and the future of development o
 
 The Image Display Working Group (IDWG) was constituted in summer 2019 with the primary goal of rectifying this shortcoming, as well as issuing recommendations on image display for the purposes of commissioning (which fell outside the QAWG scope) and considering whether useful recommendations can be made about tool development in support of diagnostic work within the Camera Subsystem.
 The detailed terms of the Working Group are provided in \citeds{LDM-702}.
+This report is the primary output of the IDWG.
+
+\textbf{Scope}: We identified uses cases and evaluated existing tools for display of images, defined as 2D arrays, only.
+Therefore, tools for visualizing point data (e.g., datashader, vaex) are out of scope and were covered in \citeds{DMTN-085}.
+The scope of this report also does not include designing one fully-featured image display tool that would fulfill all use cases.
+Given the diversity of needs and computing environments, one tool cannot and should not be used for all use cases.
 
 \section{Approach}
 
@@ -123,8 +129,8 @@ Finally, in \S\ref{sec:conc} we present conclusions and recommendations drawn fr
 \section{Environments}
 \label{sec:env}
 
-There are different environments in which a DM use would view images.
-Different tools are appropriate for different environments.
+Different tools suit and run in different environments.
+There are three different environments in which a DM user would view images.
 
 \begin{itemize}
 \item{\textbf{Laptop:} Have complete freedom of tools, for small amounts of data copied over}
@@ -133,13 +139,7 @@ Different tools are appropriate for different environments.
 \end{itemize}
 
 Therefore it is necessary to specify the environments associated with each recommendation.
-We focused recommendations  on the lsst-dev and especially the Science Platform environments, for which the image display features are only  partially implemented.
-
-DM requested the following  essential features.
-Features are some action users want to be able to complete or some characteristic of the image viewer.
-Use cases are the commissioning,  science validation, pipelines writing tasks that prompt these actions.
-Some of these features are currently possible and easy on lsst-dev and Nublado; some are not.
-We distinguish between ``possible'' and ``easy.''
+We focused recommendations on the lsst-dev and especially the Science Platform environments, for which the image display features are only partially implemented.
 
 \section{Features and User Stories}
 \label{sec:features}
@@ -184,6 +184,7 @@ Therefore we recommend that DM
 A bake-off is required to determine which to support
 \end{recommendation}
 
+A joint hackweek is being organized in 2020 with Ginga/AstroWidgets developers to develop an API that works for both LSST and Astropy.
 
 Finally, firefly farther ahead feature-wise.
 Firefly has a few unique features.
